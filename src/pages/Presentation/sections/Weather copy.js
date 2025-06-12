@@ -213,7 +213,7 @@ function WeatherSummaryCard({
                 },
               }}
             >
-              View 7-Day Forecast
+              View Forecast
             </Button>
           </Grid>
         </Grid>
@@ -567,7 +567,7 @@ export default function WeatherApp() {
         >
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2} p={1}>
             <Typography variant="h6" component="h2">
-              7-Day Forecast for {selectedCity.name}
+              Forecast for {selectedCity.name}
             </Typography>
             <IconButton onClick={handleCloseModal}>
               <CloseIcon />
