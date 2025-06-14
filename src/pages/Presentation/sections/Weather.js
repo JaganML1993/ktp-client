@@ -16,6 +16,7 @@ const CITIES = [
   { name: "Chikmagalur", lat: 13.3152, lon: 75.775 },
   { name: "Gokarna", lat: 14.5479, lon: 74.3188 },
   { name: "Bandipur National Park", lat: 11.6571, lon: 76.6295 },
+  { name: "Chennai", lat: 13.0827, lon: 80.2707 },
 ];
 
 // Helper to compare two dates without time

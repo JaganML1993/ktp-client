@@ -193,21 +193,47 @@ function WeatherSummaryCard({
             <Typography variant="body2" color="text.primary" gutterBottom>
               Sunset is at 6:24 PM – great lighting for beach photos!
             </Typography>
+
             <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
-              <img
-                src="https://thumbs.dreamstime.com/b/beautiful-rain-forest-ang-ka-nature-trail-doi-inthanon-national-park-thailand-36703721.jpg"
-                alt="Rainy Trail"
-                width={100}
-                height={70}
-                style={{ borderRadius: 8, objectFit: "cover" }}
-              />
-              <img
-                src="https://media.istockphoto.com/id/1432894575/photo/view-of-the-main-entrance-tower-of-jambukeswarar-temple-thiruvanaikaval-which-represent.jpg?s=612x612&w=0&k=20&c=exMeR-_PRybIBTgbZYu4nJR2L0D8KWYbrS2tLFzNq2o="
-                alt="Cloudy Temple"
-                width={100}
-                height={70}
-                style={{ borderRadius: 8, objectFit: "cover" }}
-              />
+              {[
+                {
+                  src: "https://thumbs.dreamstime.com/b/beautiful-rain-forest-ang-ka-nature-trail-doi-inthanon-national-park-thailand-36703721.jpg",
+                  alt: "Rainy Trail",
+                },
+                {
+                  src: "https://media.istockphoto.com/id/1432894575/photo/view-of-the-main-entrance-tower-of-jambukeswarar-temple-thiruvanaikaval-which-represent.jpg?s=612x612&w=0&k=20&c=exMeR-_PRybIBTgbZYu4nJR2L0D8KWYbrS2tLFzNq2o=",
+                  alt: "Cloudy Temple",
+                },
+              ].map((img, idx) => (
+                <Box
+                  key={idx}
+                  component="a"
+                  href="https://www.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    display: "inline-block",
+                    transition: "transform 0.3s ease",
+                    "&:hover img": {
+                      transform: "scale(1.25)",
+                    },
+                  }}
+                >
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    width={100}
+                    height={70}
+                    style={{
+                      borderRadius: 8,
+                      objectFit: "cover",
+                      transition: "transform 0.3s ease",
+                    }}
+                  />
+                </Box>
+              ))}
             </Box>
           </Box>
         </Box>
@@ -480,22 +506,61 @@ function WeatherSummaryCard({
                   <Typography variant="body2" color="text.primary" gutterBottom>
                     Sunset is at 6:24 PM – great lighting for beach photos!
                   </Typography>
+
                   <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
-                    <img
-                      src="https://thumbs.dreamstime.com/b/beautiful-rain-forest-ang-ka-nature-trail-doi-inthanon-national-park-thailand-36703721.jpg"
-                      alt="Rainy Trail"
-                      width={100}
-                      height={70}
-                      style={{ borderRadius: 8, objectFit: "cover" }}
-                    />
-                    <img
-                      src="https://media.istockphoto.com/id/1432894575/photo/view-of-the-main-entrance-tower-of-jambukeswarar-temple-thiruvanaikaval-which-represent.jpg?s=612x612&w=0&k=20&c=exMeR-_PRybIBTgbZYu4nJR2L0D8KWYbrS2tLFzNq2o="
-                      alt="Cloudy Temple"
-                      width={100}
-                      height={70}
-                      style={{ borderRadius: 8, objectFit: "cover" }}
-                    />
+                    {[
+                      {
+                        src: "https://thumbs.dreamstime.com/b/beautiful-rain-forest-ang-ka-nature-trail-doi-inthanon-national-park-thailand-36703721.jpg",
+                        alt: "Rainy Trail",
+                      },
+                      {
+                        src: "https://media.istockphoto.com/id/1432894575/photo/view-of-the-main-entrance-tower-of-jambukeswarar-temple-thiruvanaikaval-which-represent.jpg?s=612x612&w=0&k=20&c=exMeR-_PRybIBTgbZYu4nJR2L0D8KWYbrS2tLFzNq2o=",
+                        alt: "Cloudy Temple",
+                      },
+                    ].map((img, idx) => (
+                      <Box
+                        key={idx}
+                        component="a"
+                        href="https://www.google.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          borderRadius: 2,
+                          overflow: "hidden",
+                          display: "inline-block",
+                          transition: "transform 0.3s ease",
+                          "&:hover img": {
+                            transform: "scale(1.25)",
+                          },
+                        }}
+                      >
+                        <img
+                          src={img.src}
+                          alt={img.alt}
+                          width={100}
+                          height={70}
+                          style={{
+                            borderRadius: 8,
+                            objectFit: "cover",
+                            transition: "transform 0.3s ease",
+                          }}
+                        />
+                      </Box>
+                    ))}
                   </Box>
+                </Box>
+
+                <Box mt={1}>
+                  <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                    Best Time to Visit
+                  </Typography>
+                  <Typography variant="body2" color="text.primary" gutterBottom>
+                    The ideal time to visit this destination is from October to March, when the
+                    weather is pleasant and suitable for sightseeing and outdoor activities. Summer
+                    months (April to June) may be hot in inland areas, while the monsoon season
+                    (July to September) brings lush greenery, especially in hill stations like Coorg
+                    and Chikmagalur.
+                  </Typography>
                 </Box>
               </Box>
             )}
