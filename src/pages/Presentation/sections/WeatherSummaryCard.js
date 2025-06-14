@@ -24,6 +24,23 @@ import Tooltip from "@mui/material/Tooltip";
 import { Zoom } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import CloseIcon from "@mui/icons-material/Close";
+import * as he from "he";
+import DOMPurify from "dompurify";
+import HourlyForecast from "./HourlyForecast";
+
+// SafeHtml component with proper prop validation
+const SafeHtml = ({ html }) => {
+  if (!html) return null;
+
+  const decoded = he.decode(html);
+  const clean = DOMPurify.sanitize(decoded);
+
+  return <span dangerouslySetInnerHTML={{ __html: clean }} />;
+};
+
+SafeHtml.propTypes = {
+  html: PropTypes.string,
+};
 
 const getPackingSuggestions = (temp, desc) => {
   const suggestions = [];
@@ -101,10 +118,21 @@ function WeatherSummaryCard({
   onDateChange,
   lat,
   lon,
+  itineraryTip,
+  photogenicForecastContent,
+  bestTimeToVisit,
+  photogenicForecastImages,
+  compareItineraryTip,
+  comparePhotogenicForecastContent,
+  compareBestTimeToVisit,
+  comparePhotogenicForecastImages,
+  showCompare,
+  onToggleCompare,
+  hourlyData,
+  compareHourlyData,
 }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [showCompare, setShowCompare] = useState(false);
   const DEFAULT_ICON = "01d";
   const iconUrl = `https://openweathermap.org/img/wn/${icon || DEFAULT_ICON}@4x.png`;
 
@@ -117,12 +145,29 @@ function WeatherSummaryCard({
     if (showCompare) {
       onCompareCityChange(null); // clear compare city
     }
-    setShowCompare(!showCompare);
+    onToggleCompare();
   };
 
-  const renderCitySummary = (city, weatherData) => {
+  const renderCitySummary = (city, weatherData, locationDetails = {}) => {
     const { temperature: temp, description: desc, date: dt, icon: ico } = weatherData;
     const iconUrl = `https://openweathermap.org/img/wn/${ico || DEFAULT_ICON}@4x.png`;
+    const {
+      itineraryTip = locationDetails.itineraryTip ?? "Plan your day accordingly.",
+      photogenicForecastContent = locationDetails.photogenicForecastContent ??
+        "Clear skies expected",
+      bestTimeToVisit = locationDetails.bestTimeToVisit ?? "Year-round destination",
+      photogenicForecastImages = locationDetails.photogenicForecastImages ?? [],
+    } = locationDetails;
+
+    if (!city) {
+      return (
+        <Box sx={{ p: 2, textAlign: "center" }}>
+          <Typography variant="body2" color="text.secondary">
+            Loading city data...
+          </Typography>
+        </Box>
+      );
+    }
 
     return (
       <Box
@@ -156,9 +201,7 @@ function WeatherSummaryCard({
             }}
           />
         </Box>
-
         <Divider sx={{ my: 1 }} />
-
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography
             variant={isMobile ? "h4" : "h3"}
@@ -175,40 +218,59 @@ function WeatherSummaryCard({
             {desc}
           </Typography>
         </Box>
+        {/* Hourly Forecast Section */}
+        <Box mt={2}>
+          {weatherData.hourly && weatherData.hourly.length > 0 ? (
+            <>
+              <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                Hourly Forecast for {city.name}
+              </Typography>
+              <HourlyForecast hourlyData={weatherData.hourly} />
+            </>
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              Hourly data not available for {city.name}
+            </Typography>
+          )}
+        </Box>
 
         <Box mt={2}>
           <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
             What to pack for {city.name}?
           </Typography>
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-            {getPackingSuggestions(temp, desc)}
+            {getPackingSuggestions(temperature, description)}
           </Box>
-          <Typography variant="caption" color="text.primary" mt={1}>
-            <strong>Itinerary Tip:</strong> Visit early morning to avoid heat.
-          </Typography>
+          {/* Itinerary Tip Section */}
           <Box mt={1}>
-            <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+            <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
+              Itinerary Tip:
+            </Typography>
+            <Typography variant="body2" component="div" color="text.primary">
+              <SafeHtml html={itineraryTip} />
+            </Typography>
+          </Box>
+          <Box mt={1}>
+            <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
               Photogenic Forecast
             </Typography>
-            <Typography variant="body2" color="text.primary" gutterBottom>
-              Sunset is at 6:24 PM – great lighting for beach photos!
+            <Typography variant="body2" component="div" color="text.primary" gutterBottom>
+              <SafeHtml html={photogenicForecastContent} />
             </Typography>
 
-            <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
-              {[
-                {
-                  src: "https://thumbs.dreamstime.com/b/beautiful-rain-forest-ang-ka-nature-trail-doi-inthanon-national-park-thailand-36703721.jpg",
-                  alt: "Rainy Trail",
-                },
-                {
-                  src: "https://media.istockphoto.com/id/1432894575/photo/view-of-the-main-entrance-tower-of-jambukeswarar-temple-thiruvanaikaval-which-represent.jpg?s=612x612&w=0&k=20&c=exMeR-_PRybIBTgbZYu4nJR2L0D8KWYbrS2tLFzNq2o=",
-                  alt: "Cloudy Temple",
-                },
-              ].map((img, idx) => (
+            <Box sx={{ display: "flex", gap: 2, mt: 1, flexWrap: "wrap" }}>
+              {photogenicForecastImages?.map((src, idx) => (
                 <Box
                   key={idx}
                   component="a"
-                  href="https://www.google.com"
+                  href={
+                    src.startsWith("http")
+                      ? src
+                      : `${process.env.REACT_APP_API_BASE_URL}/uploads/${src.replace(
+                          /^uploads[\\/]/,
+                          ""
+                        )}`
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{
@@ -222,8 +284,15 @@ function WeatherSummaryCard({
                   }}
                 >
                   <img
-                    src={img.src}
-                    alt={img.alt}
+                    src={
+                      src.startsWith("http")
+                        ? src
+                        : `${process.env.REACT_APP_API_BASE_URL}/uploads/${src.replace(
+                            /^uploads[\\/]/,
+                            ""
+                          )}`
+                    }
+                    alt={`Photogenic ${idx + 1}`}
                     width={100}
                     height={70}
                     style={{
@@ -235,6 +304,15 @@ function WeatherSummaryCard({
                 </Box>
               ))}
             </Box>
+          </Box>
+
+          <Box mt={1}>
+            <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
+              Best Time to Visit
+            </Typography>
+            <Typography variant="body2" component="div" color="text.primary" gutterBottom>
+              <SafeHtml html={bestTimeToVisit} />
+            </Typography>
           </Box>
         </Box>
       </Box>
@@ -300,7 +378,7 @@ function WeatherSummaryCard({
               fullWidth
               label="Select Date"
               type="date"
-              value={selectedDate.toISOString().split("T")[0]}
+              value={selectedDate ? selectedDate.toISOString().split("T")[0] : ""}
               onChange={(e) => onDateChange(new Date(e.target.value))}
               InputLabelProps={{
                 shrink: true,
@@ -425,9 +503,7 @@ function WeatherSummaryCard({
             size="small"
             sx={{
               position: "absolute",
-              // top: 8,
               right: 8,
-              // zIndex: 1,
               fontWeight: "bold",
             }}
             onClick={onViewForecast}
@@ -485,43 +561,49 @@ function WeatherSummaryCard({
                 {description}
               </Typography>
             </Box>
-
+            {/* Add Hourly Forecast here */}
+            <Box mt={2}>
+              <HourlyForecast hourlyData={hourlyData} />
+            </Box>
             {/* Packing Suggestions */}
             {temperature !== null && (
               <Box mt={2}>
                 <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                  What to pack today?
+                  What to pack?
                 </Typography>
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                   {getPackingSuggestions(temperature, description)}
                 </Box>
-                <Divider sx={{ my: 1 }} />
-                <Typography variant="caption" color="text.primary" mt={1}>
-                  <strong>Itinerary Tip:</strong> Visit early morning to avoid heat.
-                </Typography>
+                {/* Itinerary Tip Section */}
                 <Box mt={1}>
-                  <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                  <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
+                    Itinerary Tip:
+                  </Typography>
+                  <Typography variant="body2" component="div" color="text.primary">
+                    <SafeHtml html={itineraryTip} />
+                  </Typography>
+                </Box>
+                <Box mt={1}>
+                  <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
                     Photogenic Forecast
                   </Typography>
-                  <Typography variant="body2" color="text.primary" gutterBottom>
-                    Sunset is at 6:24 PM – great lighting for beach photos!
+                  <Typography variant="body2" component="div" color="text.primary" gutterBottom>
+                    <SafeHtml html={photogenicForecastContent} />
                   </Typography>
 
-                  <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
-                    {[
-                      {
-                        src: "https://thumbs.dreamstime.com/b/beautiful-rain-forest-ang-ka-nature-trail-doi-inthanon-national-park-thailand-36703721.jpg",
-                        alt: "Rainy Trail",
-                      },
-                      {
-                        src: "https://media.istockphoto.com/id/1432894575/photo/view-of-the-main-entrance-tower-of-jambukeswarar-temple-thiruvanaikaval-which-represent.jpg?s=612x612&w=0&k=20&c=exMeR-_PRybIBTgbZYu4nJR2L0D8KWYbrS2tLFzNq2o=",
-                        alt: "Cloudy Temple",
-                      },
-                    ].map((img, idx) => (
+                  <Box sx={{ display: "flex", gap: 2, mt: 1, flexWrap: "wrap" }}>
+                    {photogenicForecastImages?.map((src, idx) => (
                       <Box
                         key={idx}
                         component="a"
-                        href="https://www.google.com"
+                        href={
+                          src.startsWith("http")
+                            ? src
+                            : `${process.env.REACT_APP_API_BASE_URL}/uploads/${src.replace(
+                                /^uploads[\\/]/,
+                                ""
+                              )}`
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                         sx={{
@@ -535,8 +617,15 @@ function WeatherSummaryCard({
                         }}
                       >
                         <img
-                          src={img.src}
-                          alt={img.alt}
+                          src={
+                            src.startsWith("http")
+                              ? src
+                              : `${process.env.REACT_APP_API_BASE_URL}/uploads/${src.replace(
+                                  /^uploads[\\/]/,
+                                  ""
+                                )}`
+                          }
+                          alt={`Photogenic ${idx + 1}`}
                           width={100}
                           height={70}
                           style={{
@@ -551,15 +640,11 @@ function WeatherSummaryCard({
                 </Box>
 
                 <Box mt={1}>
-                  <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                  <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
                     Best Time to Visit
                   </Typography>
-                  <Typography variant="body2" color="text.primary" gutterBottom>
-                    The ideal time to visit this destination is from October to March, when the
-                    weather is pleasant and suitable for sightseeing and outdoor activities. Summer
-                    months (April to June) may be hot in inland areas, while the monsoon season
-                    (July to September) brings lush greenery, especially in hill stations like Coorg
-                    and Chikmagalur.
+                  <Typography variant="body2" component="div" color="text.primary" gutterBottom>
+                    <SafeHtml html={bestTimeToVisit} />
                   </Typography>
                 </Box>
               </Box>
@@ -630,15 +715,52 @@ function WeatherSummaryCard({
         ) : (
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              {renderCitySummary(selectedCity, {
-                temperature,
-                description,
-                date,
-                icon,
-              })}
+              {renderCitySummary(
+                selectedCity,
+                {
+                  temperature,
+                  description,
+                  date,
+                  icon,
+                  hourly: hourlyData,
+                },
+                {
+                  itineraryTip,
+                  photogenicForecastContent,
+                  bestTimeToVisit,
+                  photogenicForecastImages,
+                }
+              )}
             </Grid>
             <Grid item xs={12} sm={6}>
-              {compareCity && compareWeather && renderCitySummary(compareCity, compareWeather)}
+              {compareCity ? (
+                compareWeather ? (
+                  renderCitySummary(
+                    compareCity,
+                    {
+                      temperature: compareWeather.temperature,
+                      description: compareWeather.description,
+                      date: compareWeather.date,
+                      icon: compareWeather.icon,
+                      hourly: compareHourlyData,
+                    },
+                    {
+                      itineraryTip: compareItineraryTip,
+                      photogenicForecastContent: comparePhotogenicForecastContent,
+                      bestTimeToVisit: compareBestTimeToVisit,
+                      photogenicForecastImages: comparePhotogenicForecastImages,
+                    }
+                  )
+                ) : (
+                  <Box sx={{ p: 2, textAlign: "center" }}>
+                    <Typography>Weather data not available</Typography>
+                  </Box>
+                )
+              ) : (
+                <Box sx={{ p: 2, textAlign: "center" }}>
+                  <Typography>Select a city to compare</Typography>
+                </Box>
+              )}
             </Grid>
           </Grid>
         )}
@@ -668,6 +790,18 @@ WeatherSummaryCard.propTypes = {
   onDateChange: PropTypes.func.isRequired,
   lat: PropTypes.number.isRequired,
   lon: PropTypes.number.isRequired,
+  itineraryTip: PropTypes.string,
+  photogenicForecastContent: PropTypes.string,
+  bestTimeToVisit: PropTypes.string,
+  photogenicForecastImages: PropTypes.arrayOf(PropTypes.string),
+  compareItineraryTip: PropTypes.string,
+  comparePhotogenicForecastContent: PropTypes.string,
+  compareBestTimeToVisit: PropTypes.string,
+  comparePhotogenicForecastImages: PropTypes.arrayOf(PropTypes.string),
+  showCompare: PropTypes.bool.isRequired,
+  onToggleCompare: PropTypes.func.isRequired,
+  hourlyData: PropTypes.array,
+  compareHourlyData: PropTypes.array,
 };
 
 WeatherSummaryCard.defaultProps = {
@@ -678,6 +812,16 @@ WeatherSummaryCard.defaultProps = {
   compareCity: null,
   compareWeather: null,
   onCompareCityChange: () => {},
+  itineraryTip: "",
+  photogenicForecastContent: "",
+  bestTimeToVisit: "",
+  photogenicForecastImages: [],
+  compareItineraryTip: "",
+  comparePhotogenicForecastContent: "",
+  compareBestTimeToVisit: "",
+  comparePhotogenicForecastImages: [],
+  hourlyData: [],
+  compareHourlyData: [],
 };
 
 export default WeatherSummaryCard;

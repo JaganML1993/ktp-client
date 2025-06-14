@@ -1,4 +1,3 @@
-// WeatherApp.js
 import React, { useEffect, useState } from "react";
 import { Box, Modal, Grid, useMediaQuery, useTheme, Tabs, Tab } from "@mui/material";
 import WeatherSummaryCard from "./WeatherSummaryCard";
@@ -8,65 +7,139 @@ import { LoadingSkeleton, ErrorCard, NoDataCard } from "./helperComponents";
 const CACHE_TTL = 60 * 60 * 1000;
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
-const CITIES = [
-  { name: "Hampi", lat: 15.335, lon: 76.46 },
-  { name: "Mysore Palace", lat: 12.3051, lon: 76.6551 },
-  { name: "Badami Caves", lat: 15.9149, lon: 75.6768 },
-  { name: "Coorg (Madikeri)", lat: 12.4244, lon: 75.7382 },
-  { name: "Chikmagalur", lat: 13.3152, lon: 75.775 },
-  { name: "Gokarna", lat: 14.5479, lon: 74.3188 },
-  { name: "Bandipur National Park", lat: 11.6571, lon: 76.6295 },
-  { name: "Chennai", lat: 13.0827, lon: 80.2707 },
-];
-
-// Helper to compare two dates without time
 const isSameDay = (d1, d2) =>
   d1.getFullYear() === d2.getFullYear() &&
   d1.getMonth() === d2.getMonth() &&
   d1.getDate() === d2.getDate();
 
 export default function WeatherApp() {
+  const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [compareCity, setCompareCity] = useState(null);
   const [weather, setWeather] = useState(null);
+  const [compareWeather, setCompareWeather] = useState(null);
   const [forecastData, setForecastData] = useState([]);
   const [compareForecastData, setCompareForecastData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [modalTab, setModalTab] = useState(0);
-  const [selectedCity, setSelectedCity] = useState(CITIES[0]);
+  const [locationDetails, setLocationDetails] = useState(null);
+  const [compareLocationDetails, setCompareLocationDetails] = useState(null);
+  const [showCompare, setShowCompare] = useState(false);
+  const [hourlyData, setHourlyData] = useState([]);
+  const [compareHourlyData, setCompareHourlyData] = useState([]);
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [compareCity, setCompareCity] = useState(null);
-  const [compareWeather, setCompareWeather] = useState(null);
 
-  const fetchWeather = async (lat, lon, cityName, cacheKeyPrefix, dateOverride = null) => {
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/admin/all-locations`);
+        const result = await res.json();
+        if (result.status === "success") {
+          const formatted = result.data.map((loc) => ({ id: loc._id, name: loc.locationName }));
+          setCities(formatted);
+          setSelectedCity(formatted[0]);
+        }
+      } catch (err) {
+        setError("Failed to load cities");
+      }
+    };
+
+    fetchCities();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCity) {
+      const fetchLocationDetails = async (id) => {
+        try {
+          const res = await fetch(`${baseUrl}/api/admin/location-details/${id}`);
+          const result = await res.json();
+          if (result.status === "success") {
+            setLocationDetails(result.data);
+          }
+        } catch (err) {
+          console.error("Failed to load location details", err);
+        }
+      };
+      fetchLocationDetails(selectedCity.id);
+    }
+  }, [selectedCity]);
+
+  useEffect(() => {
+    if (compareCity) {
+      const fetchCompareLocationDetails = async (id) => {
+        try {
+          const res = await fetch(`${baseUrl}/api/admin/location-details/${id}`);
+          const result = await res.json();
+          if (result.status === "success") {
+            setCompareLocationDetails(result.data);
+          }
+        } catch (err) {
+          console.error("Failed to load compare location details", err);
+        }
+      };
+      fetchCompareLocationDetails(compareCity.id);
+    } else {
+      setCompareLocationDetails(null);
+    }
+  }, [compareCity]);
+
+  const fetchWeather = async (cityId, cityName, cacheKeyPrefix, dateOverride = null) => {
     try {
       const dateParam = dateOverride ? dateOverride.toISOString().split("T")[0] : null;
-      const cacheKey = `${cacheKeyPrefix}_${lat}_${lon}_${dateParam || "all"}`;
+      const cacheKey = `${cacheKeyPrefix}_${cityId}_${dateParam || "all"}`;
       const cached = localStorage.getItem(cacheKey);
       if (cached) {
         const { timestamp, data } = JSON.parse(cached);
         if (Date.now() - timestamp < CACHE_TTL) return data;
       }
 
-      const apiUrl = `${baseUrl}/api/weather/forecast-days?lat=${lat}&lon=${lon}${
-        dateParam ? `&date=${dateParam}` : ""
-      }`;
+      const apiUrl = `${baseUrl}/api/weather/forecast-days?cityId=${cityId}`;
       const response = await fetch(apiUrl);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       const apiData = await response.json();
       if (!apiData.data || apiData.data.length === 0) throw new Error("No forecast data found");
 
-      const firstDay = apiData.data[0];
-      const weatherInfo = firstDay.weather[0];
+      // Get current day's data (index 0 is today)
+      const todayData = apiData.data[0];
+      const weatherInfo = todayData.weather[0];
+
+      // Filter hourly data for today only
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+      const todayEnd = new Date();
+      todayEnd.setHours(23, 59, 59, 999);
+
+      const todayHourly =
+        apiData.hourly
+          ?.filter((hour) => {
+            const hourDate = new Date(hour.dt * 1000);
+            return hourDate >= todayStart && hourDate <= todayEnd;
+          })
+          .map((hour) => ({
+            time: new Date(hour.dt * 1000).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            temp: Math.round(hour.temp),
+            feels_like: Math.round(hour.feels_like),
+            humidity: hour.humidity,
+            wind_speed: hour.wind_speed,
+            description: hour.weather[0].description,
+            icon: hour.weather[0].icon,
+            pop: Math.round(hour.pop * 100),
+          })) || [];
 
       const currentWeather = {
         city: cityName,
-        temperature: Math.round(firstDay.temp.day),
+        temperature: Math.round(todayData.temp.day),
         description: weatherInfo.description || "No description",
-        date: new Date(firstDay.dt * 1000).toLocaleDateString("en-IN", {
+        date: new Date(todayData.dt * 1000).toLocaleDateString("en-IN", {
           weekday: "long",
           year: "numeric",
           month: "long",
@@ -87,9 +160,13 @@ export default function WeatherApp() {
         icon: day.weather[0].icon,
       }));
 
-      const data = { current: currentWeather, forecast };
-      localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data }));
+      const data = {
+        current: currentWeather,
+        forecast,
+        hourly: todayHourly,
+      };
 
+      localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data }));
       return data;
     } catch (err) {
       throw new Error(err.message || "Weather fetch failed");
@@ -97,18 +174,19 @@ export default function WeatherApp() {
   };
 
   const fetchWeatherForCity = async () => {
+    if (!selectedCity) return;
     try {
       setLoading(true);
       setError(null);
       const data = await fetchWeather(
-        selectedCity.lat,
-        selectedCity.lon,
+        selectedCity.id,
         selectedCity.name,
         "weather_forecast",
         isSameDay(selectedDate, new Date()) ? null : selectedDate
       );
       setWeather(data.current);
       setForecastData(data.forecast);
+      setHourlyData(data.hourly);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -119,23 +197,24 @@ export default function WeatherApp() {
   const fetchCompareWeather = async (city) => {
     try {
       const data = await fetchWeather(
-        city.lat,
-        city.lon,
+        city.id,
         city.name,
         "compare_forecast",
         isSameDay(selectedDate, new Date()) ? null : selectedDate
       );
       setCompareWeather(data.current);
       setCompareForecastData(data.forecast);
+      setCompareHourlyData(data.hourly);
     } catch (err) {
       console.error("Compare weather error:", err);
       setCompareWeather(null);
       setCompareForecastData([]);
+      setCompareHourlyData([]);
     }
   };
 
   useEffect(() => {
-    fetchWeatherForCity();
+    if (selectedCity) fetchWeatherForCity();
   }, [selectedCity, selectedDate]);
 
   useEffect(() => {
@@ -143,17 +222,18 @@ export default function WeatherApp() {
   }, [compareCity, selectedDate]);
 
   const handleCityChange = (newCity) => setSelectedCity(newCity);
-  const handleCompareCityChange = (newCity) => setCompareCity(newCity);
+  const handleCompareCityChange = async (newCity) => {
+    setCompareCity(newCity);
+    if (newCity) {
+      await fetchCompareWeather(newCity);
+    }
+  };
   const handleOpenModal = () => {
     setModalTab(0);
     setOpenModal(true);
   };
   const handleCloseModal = () => setOpenModal(false);
   const handleTabChange = (event, newValue) => setModalTab(newValue);
-  const handleCompareViewForecast = () => {
-    setModalTab(1);
-    setOpenModal(true);
-  };
 
   if (loading) return <LoadingSkeleton />;
   if (error) return <ErrorCard error={error} />;
@@ -169,17 +249,33 @@ export default function WeatherApp() {
             date={weather.date}
             icon={weather.icon}
             onViewForecast={handleOpenModal}
-            onCompareViewForecast={handleCompareViewForecast}
             onCityChange={handleCityChange}
             selectedCity={selectedCity}
-            cities={CITIES}
+            cities={cities}
             onCompareCityChange={handleCompareCityChange}
             compareCity={compareCity}
-            compareWeather={compareWeather}
+            compareWeather={{
+              temperature: compareWeather?.temperature,
+              description: compareWeather?.description,
+              date: compareWeather?.date,
+              icon: compareWeather?.icon,
+            }}
             selectedDate={selectedDate}
             onDateChange={setSelectedDate}
-            lat={selectedCity.lat}
-            lon={selectedCity.lon}
+            lat={locationDetails?.lat || 0}
+            lon={locationDetails?.lng || 0}
+            itineraryTip={locationDetails?.itineraryTip}
+            photogenicForecastContent={locationDetails?.photogenicForecastContent}
+            bestTimeToVisit={locationDetails?.bestTimeToVisit}
+            photogenicForecastImages={locationDetails?.photogenicForecastImages}
+            compareItineraryTip={compareLocationDetails?.itineraryTip}
+            comparePhotogenicForecastContent={compareLocationDetails?.photogenicForecastContent}
+            compareBestTimeToVisit={compareLocationDetails?.bestTimeToVisit}
+            comparePhotogenicForecastImages={compareLocationDetails?.photogenicForecastImages}
+            showCompare={showCompare}
+            onToggleCompare={() => setShowCompare((prev) => !prev)}
+            hourlyData={hourlyData}
+            compareHourlyData={compareHourlyData}
           />
         </Grid>
       </Grid>
@@ -199,14 +295,16 @@ export default function WeatherApp() {
             boxShadow: 24,
             p: isMobile ? 1 : 3,
             overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           <Tabs value={modalTab} onChange={handleTabChange} centered>
-            <Tab label={selectedCity.name} />
+            <Tab label={selectedCity?.name || "Selected City"} />
             {compareCity && <Tab label={compareCity.name} />}
           </Tabs>
 
-          <Box mt={2}>
+          <Box sx={{ overflowY: "auto", flex: 1, mt: 2 }}>
             {modalTab === 0 && <ForecastCards forecastData={forecastData} />}
             {modalTab === 1 && compareCity && <ForecastCards forecastData={compareForecastData} />}
           </Box>
