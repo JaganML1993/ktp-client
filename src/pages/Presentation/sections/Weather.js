@@ -7,11 +7,6 @@ import { LoadingSkeleton, ErrorCard, NoDataCard } from "./helperComponents";
 const CACHE_TTL = 60 * 60 * 1000;
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
-const isSameDay = (d1, d2) =>
-  d1.getFullYear() === d2.getFullYear() &&
-  d1.getMonth() === d2.getMonth() &&
-  d1.getDate() === d2.getDate();
-
 export default function WeatherApp() {
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -105,21 +100,37 @@ export default function WeatherApp() {
       const apiData = await response.json();
       if (!apiData.data || apiData.data.length === 0) throw new Error("No forecast data found");
 
-      // Get current day's data (index 0 is today)
-      const todayData = apiData.data[0];
-      const weatherInfo = todayData.weather[0];
+      // Find data for the selected date
+      let selectedDayData;
+      if (dateOverride) {
+        const selectedDateStr = dateOverride.toISOString().split("T")[0];
+        selectedDayData = apiData.data.find((day) => {
+          const dayDate = new Date(day.dt * 1000).toISOString().split("T")[0];
+          return dayDate === selectedDateStr;
+        });
 
-      // Filter hourly data for today only
-      const todayStart = new Date();
-      todayStart.setHours(0, 0, 0, 0);
-      const todayEnd = new Date();
-      todayEnd.setHours(23, 59, 59, 999);
+        if (!selectedDayData) {
+          throw new Error("No data available for selected date");
+        }
+      } else {
+        // Default to today's data if no date override
+        selectedDayData = apiData.data[0];
+      }
 
-      const todayHourly =
+      const weatherInfo = selectedDayData.weather[0];
+
+      // Filter hourly data for the selected date only
+      const selectedDateStart = dateOverride ? new Date(dateOverride) : new Date();
+      selectedDateStart.setHours(0, 0, 0, 0);
+
+      const selectedDateEnd = dateOverride ? new Date(dateOverride) : new Date();
+      selectedDateEnd.setHours(23, 59, 59, 999);
+
+      const filteredHourly =
         apiData.hourly
           ?.filter((hour) => {
             const hourDate = new Date(hour.dt * 1000);
-            return hourDate >= todayStart && hourDate <= todayEnd;
+            return hourDate >= selectedDateStart && hourDate <= selectedDateEnd;
           })
           .map((hour) => ({
             time: new Date(hour.dt * 1000).toLocaleTimeString([], {
@@ -137,9 +148,9 @@ export default function WeatherApp() {
 
       const currentWeather = {
         city: cityName,
-        temperature: Math.round(todayData.temp.day),
+        temperature: Math.round(selectedDayData.temp.day),
         description: weatherInfo.description || "No description",
-        date: new Date(todayData.dt * 1000).toLocaleDateString("en-IN", {
+        date: new Date(selectedDayData.dt * 1000).toLocaleDateString("en-IN", {
           weekday: "long",
           year: "numeric",
           month: "long",
@@ -163,7 +174,7 @@ export default function WeatherApp() {
       const data = {
         current: currentWeather,
         forecast,
-        hourly: todayHourly,
+        hourly: filteredHourly,
       };
 
       localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data }));
@@ -182,7 +193,7 @@ export default function WeatherApp() {
         selectedCity.id,
         selectedCity.name,
         "weather_forecast",
-        isSameDay(selectedDate, new Date()) ? null : selectedDate
+        selectedDate
       );
       setWeather(data.current);
       setForecastData(data.forecast);
@@ -196,12 +207,7 @@ export default function WeatherApp() {
 
   const fetchCompareWeather = async (city) => {
     try {
-      const data = await fetchWeather(
-        city.id,
-        city.name,
-        "compare_forecast",
-        isSameDay(selectedDate, new Date()) ? null : selectedDate
-      );
+      const data = await fetchWeather(city.id, city.name, "compare_forecast", selectedDate);
       setCompareWeather(data.current);
       setCompareForecastData(data.forecast);
       setCompareHourlyData(data.hourly);
