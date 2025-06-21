@@ -42,9 +42,9 @@ SafeHtml.propTypes = {
   html: PropTypes.string,
 };
 
-const getPackingSuggestions = (temp, desc) => {
+const getPackingSuggestions = (temp, desc = "") => {
   const suggestions = [];
-  const descLower = desc.toLowerCase();
+  const descLower = desc?.toLowerCase?.() || "";
 
   if (temp >= 30) {
     suggestions.push({ label: "Light clothing", emoji: "👕" });
@@ -120,16 +120,20 @@ function WeatherSummaryCard({
   lon,
   itineraryTip,
   photogenicForecastContent,
-  bestTimeToVisit,
+  additionalField,
   photogenicForecastImages,
+  photogenicForecastLink,
   compareItineraryTip,
   comparePhotogenicForecastContent,
-  compareBestTimeToVisit,
+  compareAdditionalField,
   comparePhotogenicForecastImages,
+  comparePhotogenicForecastLink,
   showCompare,
   onToggleCompare,
   hourlyData,
   compareHourlyData,
+  bestTimeToVisit,
+  compareBestTimeToVisit,
 }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -152,11 +156,12 @@ function WeatherSummaryCard({
     const { temperature: temp, description: desc, date: dt, icon: ico } = weatherData;
     const iconUrl = `https://openweathermap.org/img/wn/${ico || DEFAULT_ICON}@4x.png`;
     const {
-      itineraryTip = locationDetails.itineraryTip ?? "Plan your day accordingly.",
-      photogenicForecastContent = locationDetails.photogenicForecastContent ??
-        "Clear skies expected",
-      bestTimeToVisit = locationDetails.bestTimeToVisit ?? "Year-round destination",
-      photogenicForecastImages = locationDetails.photogenicForecastImages ?? [],
+      itineraryTip,
+      photogenicForecastContent,
+      additionalField,
+      bestTimeToVisit,
+      photogenicForecastImages,
+      photogenicForecastLink,
     } = locationDetails;
 
     if (!city) {
@@ -239,7 +244,7 @@ function WeatherSummaryCard({
             What to pack for {city.name}?
           </Typography>
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-            {getPackingSuggestions(temperature, description)}
+            {getPackingSuggestions(temp, desc)}
           </Box>
           {/* Itinerary Tip Section */}
           <Box mt={1}>
@@ -263,14 +268,7 @@ function WeatherSummaryCard({
                 <Box
                   key={idx}
                   component="a"
-                  href={
-                    src.startsWith("http")
-                      ? src
-                      : `${process.env.REACT_APP_API_BASE_URL}/uploads/${src.replace(
-                          /^uploads[\\/]/,
-                          ""
-                        )}`
-                  }
+                  href={photogenicForecastLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{
@@ -308,7 +306,7 @@ function WeatherSummaryCard({
 
           <Box mt={1}>
             <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
-              Best Time to Visit
+              {additionalField}
             </Typography>
             <Typography variant="body2" component="div" color="text.primary" gutterBottom>
               <SafeHtml html={bestTimeToVisit} />
@@ -596,14 +594,7 @@ function WeatherSummaryCard({
                       <Box
                         key={idx}
                         component="a"
-                        href={
-                          src.startsWith("http")
-                            ? src
-                            : `${process.env.REACT_APP_API_BASE_URL}/uploads/${src.replace(
-                                /^uploads[\\/]/,
-                                ""
-                              )}`
-                        }
+                        href={photogenicForecastLink}
                         target="_blank"
                         rel="noopener noreferrer"
                         sx={{
@@ -641,7 +632,7 @@ function WeatherSummaryCard({
 
                 <Box mt={1}>
                   <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
-                    Best Time to Visit
+                    {additionalField}
                   </Typography>
                   <Typography variant="body2" component="div" color="text.primary" gutterBottom>
                     <SafeHtml html={bestTimeToVisit} />
@@ -727,8 +718,10 @@ function WeatherSummaryCard({
                 {
                   itineraryTip,
                   photogenicForecastContent,
-                  bestTimeToVisit,
+                  additionalField,
                   photogenicForecastImages,
+                  photogenicForecastLink,
+                  bestTimeToVisit: bestTimeToVisit,
                 }
               )}
             </Grid>
@@ -747,8 +740,10 @@ function WeatherSummaryCard({
                     {
                       itineraryTip: compareItineraryTip,
                       photogenicForecastContent: comparePhotogenicForecastContent,
+                      additionalField: compareAdditionalField,
                       bestTimeToVisit: compareBestTimeToVisit,
                       photogenicForecastImages: comparePhotogenicForecastImages,
+                      photogenicForecastLink: comparePhotogenicForecastLink,
                     }
                   )
                 ) : (
@@ -792,16 +787,20 @@ WeatherSummaryCard.propTypes = {
   lon: PropTypes.number.isRequired,
   itineraryTip: PropTypes.string,
   photogenicForecastContent: PropTypes.string,
-  bestTimeToVisit: PropTypes.string,
+  additionalField: PropTypes.string,
   photogenicForecastImages: PropTypes.arrayOf(PropTypes.string),
+  photogenicForecastLink: PropTypes.string,
   compareItineraryTip: PropTypes.string,
   comparePhotogenicForecastContent: PropTypes.string,
-  compareBestTimeToVisit: PropTypes.string,
+  compareAdditionalField: PropTypes.string,
   comparePhotogenicForecastImages: PropTypes.arrayOf(PropTypes.string),
+  comparePhotogenicForecastLink: PropTypes.string,
   showCompare: PropTypes.bool.isRequired,
   onToggleCompare: PropTypes.func.isRequired,
   hourlyData: PropTypes.array,
   compareHourlyData: PropTypes.array,
+  bestTimeToVisit: PropTypes.string,
+  compareBestTimeToVisit: PropTypes.string,
 };
 
 WeatherSummaryCard.defaultProps = {
@@ -814,14 +813,18 @@ WeatherSummaryCard.defaultProps = {
   onCompareCityChange: () => {},
   itineraryTip: "",
   photogenicForecastContent: "",
-  bestTimeToVisit: "",
+  additionalField: "Best Time to Visit",
   photogenicForecastImages: [],
+  photogenicForecastLink: "#",
   compareItineraryTip: "",
   comparePhotogenicForecastContent: "",
-  compareBestTimeToVisit: "",
+  compareAdditionalField: "Best Time to Visit",
   comparePhotogenicForecastImages: [],
+  comparePhotogenicForecastLink: "#",
   hourlyData: [],
   compareHourlyData: [],
+  bestTimeToVisit: "",
+  compareBestTimeToVisit: "",
 };
 
 export default WeatherSummaryCard;

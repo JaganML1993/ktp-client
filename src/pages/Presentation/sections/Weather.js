@@ -276,12 +276,15 @@ export default function WeatherApp() {
             photogenicForecastImages={locationDetails?.photogenicForecastImages}
             compareItineraryTip={compareLocationDetails?.itineraryTip}
             comparePhotogenicForecastContent={compareLocationDetails?.photogenicForecastContent}
-            compareBestTimeToVisit={compareLocationDetails?.bestTimeToVisit}
+            compareAdditionalField={compareLocationDetails?.additionalField}
             comparePhotogenicForecastImages={compareLocationDetails?.photogenicForecastImages}
+            comparePhotogenicForecastLink={compareLocationDetails?.photogenicForecastLink}
+            compareBestTimeToVisit={compareLocationDetails?.bestTimeToVisit}
             showCompare={showCompare}
             onToggleCompare={() => setShowCompare((prev) => !prev)}
             hourlyData={hourlyData}
             compareHourlyData={compareHourlyData}
+            additionalField={locationDetails?.additionalField}
           />
         </Grid>
       </Grid>
