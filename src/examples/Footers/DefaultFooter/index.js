@@ -1,29 +1,8 @@
-/*
-=========================================================
-* Material Kit 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-kit-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// react-router-dom components
 import { Link } from "react-router-dom";
-
-// prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
-
-// @mui material components
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-
-// Material Kit 2 React components
+import IconButton from "@mui/material/IconButton";
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 
@@ -31,36 +10,53 @@ function DefaultFooter({ content }) {
   const { brand, socials, copyright } = content;
 
   return (
-    <MKBox component="footer">
+    <MKBox component="footer" py={6} sx={{ backgroundColor: "#f1f2f3" }}>
       <Container>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={3} sx={{ ml: "auto", mb: 3 }}>
-            <MKBox>
+        <Grid container justifyContent="space-between" alignItems="center">
+          <Grid item xs={12} md={6}>
+            <MKBox display="flex" alignItems="center">
               <Link to={brand.route}>
-                <MKBox component="img" src={brand.image} alt={brand.name} maxWidth="2rem" mb={2} />
+                <MKBox component="img" src={brand.image} alt={brand.name} maxWidth="12rem" mr={2} />
               </Link>
-              <MKTypography variant="h6">{brand.name}</MKTypography>
+              <MKTypography variant="h6" color="text.primary">
+                {brand.name}
+              </MKTypography>
             </MKBox>
-            <MKBox display="flex" alignItems="center" mt={3}>
-              {socials.map(({ icon, link }, key) => (
-                <MKTypography
-                  key={link}
+          </Grid>
+
+          <Grid
+            item
+            xs={12}
+            md={6}
+            sx={{ textAlign: { xs: "center", md: "right" }, mt: { xs: 3, md: 0 } }}
+          >
+            <MKBox display="flex" justifyContent={{ xs: "center", md: "flex-end" }} gap={2}>
+              {socials.map(({ icon, link }, index) => (
+                <IconButton
+                  key={index}
                   component="a"
                   href={link}
                   target="_blank"
                   rel="noreferrer"
-                  variant="h5"
-                  color="dark"
-                  opacity={0.8}
-                  mr={key === socials.length - 1 ? 0 : 2.5}
+                  sx={{
+                    backgroundColor: "white",
+                    borderRadius: "50%",
+                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                    "&:hover": { backgroundColor: "#f0f0f0" },
+                    width: 48,
+                    height: 48,
+                  }}
                 >
                   {icon}
-                </MKTypography>
+                </IconButton>
               ))}
             </MKBox>
           </Grid>
-          <Grid item xs={12} sx={{ textAlign: "center", my: 3 }}>
-            {copyright}
+
+          <Grid item xs={12} mt={4}>
+            <MKTypography variant="body2" color="text.primary" align="center">
+              {copyright}
+            </MKTypography>
           </Grid>
         </Grid>
       </Container>
@@ -68,7 +64,6 @@ function DefaultFooter({ content }) {
   );
 }
 
-// Typechecking props for the DefaultFooter
 DefaultFooter.propTypes = {
   content: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.object, PropTypes.array])).isRequired,
 };

@@ -38,8 +38,8 @@ function Presentation() {
         routes={routes}
         action={{
           type: "external",
-          route: "https://www.creative-tim.com/product/material-kit-react",
-          label: "free download",
+          route: "https://www.karnatakatravelplaces.com/",
+          label: "Visit",
           color: "info",
         }}
         sticky
@@ -77,7 +77,7 @@ function Presentation() {
               px={{ xs: 6, lg: 12 }}
               mt={1}
             >
-              Weather updates, anytime, anywhere.
+              Real-Time Weather & Climate Guide
             </MKTypography>
           </Grid>
         </Container>
