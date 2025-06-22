@@ -517,8 +517,8 @@ function WeatherSummaryCard({
                 <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
                   {selectedCity.name}
                   <Tooltip title="Show location on map">
-                    <IconButton onClick={toggleMap} size="small" color="primary">
-                      <LocationOnIcon />
+                    <IconButton onClick={toggleMap} size="small">
+                      <LocationOnIcon sx={{ color: "error.main" }} />
                     </IconButton>
                   </Tooltip>
                 </Typography>
