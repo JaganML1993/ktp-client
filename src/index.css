@@ -2,10 +2,32 @@
   display: none !important;
 }
 .css-1szq5he{
-    padding-top: 0px !important;
+    padding-top: 35px !important;
     padding-bottom: 0px !important;
+    background-color: #082740 !important;
 }
 .css-xwfk3g{
     padding-top: 0px !important;
     margin-top: 0PX !important;
+    background-color: #082740 !important;
+}
+.css-1yirv5l-MuiGrid-root{
+    margin-top: 0px !important;
+}
+.css-eimhud-MuiSvgIcon-root{
+    color: white;
+    width: 1.9rem !important;
+    height: 1.9rem !important;
+
+}
+.css-eimhud-MuiSvgIcon-root:hover{
+    color:  #082740 !important;;
+}
+
+.css-1nrekpq-MuiButtonBase-root-MuiIconButton-root{
+    box-shadow:0 2px 4px white !important;
+}
+
+.css-1fbzxgt-MuiTypography-root{
+    color: white !important;
 }

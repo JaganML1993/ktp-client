@@ -42,6 +42,7 @@ import DefaultNavbarMobile from "examples/Navbars/DefaultNavbar/DefaultNavbarMob
 
 // Material Kit 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";
+import logo from "assets/images/logo.png";
 
 function DefaultNavbar({ brand, routes, transparent, light, action, sticky, relative, center }) {
   const [dropdown, setDropdown] = useState("");
@@ -477,7 +478,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
             pl={relative || transparent ? 0 : { xs: 0, lg: 1 }}
           >
             <MKTypography variant="button" fontWeight="bold" color={light ? "white" : "dark"}>
-              {brand}
+              <img src={logo} alt={brand} style={{ height: 40 }} />
             </MKTypography>
           </MKBox>
           <MKBox
