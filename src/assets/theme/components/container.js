@@ -60,7 +60,7 @@ export default {
   [XL]: {
     ".MuiContainer-root": {
       ...sharedClasses,
-      maxWidth: "1140px !important",
+      maxWidth: "1300px !important",
     },
   },
   [XXL]: {
