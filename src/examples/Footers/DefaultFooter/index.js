@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
@@ -7,28 +7,35 @@ import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 
 function DefaultFooter({ content }) {
-  const { brand, socials, copyright } = content;
+  const { socials, copyright } = content;
 
   return (
-    <MKBox component="footer" py={6} sx={{ backgroundColor: "#f1f2f3" }}>
+    <MKBox
+      component="footer"
+      sx={{
+        paddingTop: "35px !important",
+        paddingBottom: "35px !important",
+        backgroundColor: "#082740 !important",
+      }}
+    >
       <Container>
         <Grid container justifyContent="space-between" alignItems="center">
+          {/* Left: Copyright Text */}
           <Grid item xs={12} md={6}>
-            <MKBox display="flex" alignItems="center">
-              <Link to={brand.route}>
-                <MKBox component="img" src={brand.image} alt={brand.name} maxWidth="12rem" mr={2} />
-              </Link>
-              <MKTypography variant="h6" color="text.primary">
-                {brand.name}
-              </MKTypography>
-            </MKBox>
+            <MKTypography variant="body2" color="white" align="left">
+              {copyright}
+            </MKTypography>
           </Grid>
 
+          {/* Right: Social Icons */}
           <Grid
             item
             xs={12}
             md={6}
-            sx={{ textAlign: { xs: "center", md: "right" }, mt: { xs: 3, md: 0 } }}
+            sx={{
+              textAlign: { xs: "center", md: "right" },
+              mt: { xs: 2, md: 0 },
+            }}
           >
             <MKBox display="flex" justifyContent={{ xs: "center", md: "flex-end" }} gap={2}>
               {socials.map(({ icon, link }, index) => (
@@ -52,12 +59,6 @@ function DefaultFooter({ content }) {
               ))}
             </MKBox>
           </Grid>
-
-          <Grid item xs={12} mt={4}>
-            <MKTypography variant="body2" color="text.primary" align="center">
-              {copyright}
-            </MKTypography>
-          </Grid>
         </Grid>
       </Container>
     </MKBox>
@@ -65,7 +66,20 @@ function DefaultFooter({ content }) {
 }
 
 DefaultFooter.propTypes = {
-  content: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.object, PropTypes.array])).isRequired,
+  content: PropTypes.shape({
+    brand: PropTypes.shape({
+      name: PropTypes.string,
+      image: PropTypes.string,
+      route: PropTypes.string,
+    }),
+    socials: PropTypes.arrayOf(
+      PropTypes.shape({
+        icon: PropTypes.node,
+        link: PropTypes.string,
+      })
+    ),
+    copyright: PropTypes.string,
+  }).isRequired,
 };
 
 export default DefaultFooter;
