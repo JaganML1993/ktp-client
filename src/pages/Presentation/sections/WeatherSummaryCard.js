@@ -10,9 +10,6 @@ import {
   Grid,
   useMediaQuery,
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Chip,
   Link,
   TextField,
@@ -27,6 +24,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import * as he from "he";
 import DOMPurify from "dompurify";
 import HourlyForecast from "./HourlyForecast";
+import Autocomplete from "@mui/material/Autocomplete";
 
 // SafeHtml component with proper prop validation
 const SafeHtml = ({ html }) => {
@@ -134,6 +132,8 @@ function WeatherSummaryCard({
   compareHourlyData,
   bestTimeToVisit,
   compareBestTimeToVisit,
+  dangerAlert,
+  compareDangerAlert,
 }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -238,6 +238,20 @@ function WeatherSummaryCard({
             </Typography>
           )}
         </Box>
+
+        {locationDetails.dangerAlert && (
+          <Box
+            mt={2}
+            sx={{ backgroundColor: "#fff4e5", p: 2, borderRadius: 2, border: "1px solid #ffa726" }}
+          >
+            <Typography variant="subtitle2" fontWeight="bold" color="error.main" gutterBottom>
+              ⚠️ Danger Alert
+            </Typography>
+            <Typography variant="body2" component="div" color="text.primary">
+              <SafeHtml html={locationDetails.dangerAlert} />
+            </Typography>
+          </Box>
+        )}
 
         <Box mt={2}>
           <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
@@ -389,45 +403,18 @@ function WeatherSummaryCard({
           </FormControl>
 
           <FormControl sx={formControlStyles}>
-            <InputLabel id="city-select-label">Select City</InputLabel>
-            <Select
-              labelId="city-select-label"
-              id="city-select"
-              value={selectedCity}
-              label="Select City"
-              onChange={(e) => onCityChange(e.target.value)}
-              renderValue={(selected) => (
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <span style={{ fontWeight: 600 }}>{selected.name}</span>
-                </Box>
-              )}
-              MenuProps={{
-                PaperProps: {
-                  sx: {
-                    borderRadius: 3,
-                    boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
-                    marginTop: 1,
-                    "& .MuiMenuItem-root": {
-                      padding: "12px 16px",
-                      fontWeight: 500,
-                      "&:hover": {
-                        backgroundColor: theme.palette.action.hover,
-                      },
-                      "&.Mui-selected": {
-                        backgroundColor: theme.palette.primary.light,
-                        fontWeight: 600,
-                      },
-                    },
-                  },
-                },
+            <Autocomplete
+              options={cities}
+              getOptionLabel={(option) => option.name || ""}
+              value={selectedCity || null}
+              onChange={(event, newValue) => {
+                if (newValue) onCityChange(newValue);
               }}
-            >
-              {cities.map((city) => (
-                <MenuItem key={city.name} value={city}>
-                  {city.name}
-                </MenuItem>
-              ))}
-            </Select>
+              renderInput={(params) => (
+                <TextField {...params} label="Select City" variant="outlined" fullWidth />
+              )}
+              isOptionEqualToValue={(option, value) => option.id === value?.id}
+            />
           </FormControl>
 
           <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
@@ -451,45 +438,16 @@ function WeatherSummaryCard({
 
             {showCompare && (
               <FormControl sx={formControlStyles}>
-                <InputLabel id="compare-city-select-label">Compare City</InputLabel>
-                <Select
-                  labelId="compare-city-select-label"
-                  id="compare-city-select"
-                  value={compareCity}
-                  label="Compare City"
-                  onChange={(e) => onCompareCityChange(e.target.value)}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <span style={{ fontWeight: 600 }}>{selected?.name || ""}</span>
-                    </Box>
+                <Autocomplete
+                  options={cities}
+                  getOptionLabel={(option) => option.name || ""}
+                  value={compareCity || null}
+                  onChange={(event, newValue) => onCompareCityChange(newValue)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Compare City" variant="outlined" fullWidth />
                   )}
-                  MenuProps={{
-                    PaperProps: {
-                      sx: {
-                        borderRadius: 3,
-                        boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
-                        marginTop: 1,
-                        "& .MuiMenuItem-root": {
-                          padding: "12px 16px",
-                          fontWeight: 500,
-                          "&:hover": {
-                            backgroundColor: theme.palette.action.hover,
-                          },
-                          "&.Mui-selected": {
-                            backgroundColor: theme.palette.primary.light,
-                            fontWeight: 600,
-                          },
-                        },
-                      },
-                    },
-                  }}
-                >
-                  {cities.map((city) => (
-                    <MenuItem key={`compare-${city.name}`} value={city}>
-                      {city.name}
-                    </MenuItem>
-                  ))}
-                </Select>
+                  isOptionEqualToValue={(option, value) => option.id === value?.id}
+                />
               </FormControl>
             )}
           </Box>
@@ -515,7 +473,7 @@ function WeatherSummaryCard({
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
               <Box>
                 <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
-                  {selectedCity.name}
+                  {selectedCity?.name || "Select a city"}
                   <Tooltip title="Show location on map">
                     <IconButton onClick={toggleMap} size="small">
                       <LocationOnIcon sx={{ color: "error.main" }} />
@@ -564,6 +522,25 @@ function WeatherSummaryCard({
               <HourlyForecast hourlyData={hourlyData} />
             </Box>
             {/* Packing Suggestions */}
+            {dangerAlert && (
+              <Box
+                mt={2}
+                sx={{
+                  backgroundColor: "#fff4e5",
+                  p: 2,
+                  borderRadius: 2,
+                  border: "1px solid #ffa726",
+                }}
+              >
+                <Typography variant="subtitle2" fontWeight="bold" color="error.main" gutterBottom>
+                  ⚠️ Danger Alert
+                </Typography>
+                <Typography variant="body2" component="div" color="text.primary">
+                  <SafeHtml html={dangerAlert} />
+                </Typography>
+              </Box>
+            )}
+
             {temperature !== null && (
               <Box mt={2}>
                 <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
@@ -722,6 +699,7 @@ function WeatherSummaryCard({
                   photogenicForecastImages,
                   photogenicForecastLink,
                   bestTimeToVisit: bestTimeToVisit,
+                  dangerAlert,
                 }
               )}
             </Grid>
@@ -744,6 +722,7 @@ function WeatherSummaryCard({
                       bestTimeToVisit: compareBestTimeToVisit,
                       photogenicForecastImages: comparePhotogenicForecastImages,
                       photogenicForecastLink: comparePhotogenicForecastLink,
+                      dangerAlert: compareDangerAlert,
                     }
                   )
                 ) : (
@@ -801,6 +780,8 @@ WeatherSummaryCard.propTypes = {
   compareHourlyData: PropTypes.array,
   bestTimeToVisit: PropTypes.string,
   compareBestTimeToVisit: PropTypes.string,
+  dangerAlert: PropTypes.string,
+  compareDangerAlert: PropTypes.string,
 };
 
 WeatherSummaryCard.defaultProps = {
@@ -825,6 +806,8 @@ WeatherSummaryCard.defaultProps = {
   compareHourlyData: [],
   bestTimeToVisit: "",
   compareBestTimeToVisit: "",
+  dangerAlert: "",
+  compareDangerAlert: "",
 };
 
 export default WeatherSummaryCard;

@@ -285,6 +285,8 @@ export default function WeatherApp() {
             hourlyData={hourlyData}
             compareHourlyData={compareHourlyData}
             additionalField={locationDetails?.additionalField}
+            dangerAlert={locationDetails?.dangerAlert}
+            compareDangerAlert={compareLocationDetails?.dangerAlert}
           />
         </Grid>
       </Grid>
