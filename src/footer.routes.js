@@ -15,6 +15,9 @@ const iconWrapperStyle = {
   justifyContent: "center",
   boxShadow: "0 2px 4px white",
   transition: "all 0.3s ease",
+  "&:hover svg": {
+    color: "#344767 !important", // change icon color on hover
+  },
 };
 
 const iconStyle = {
