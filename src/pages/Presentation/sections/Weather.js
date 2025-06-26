@@ -278,6 +278,7 @@ export default function WeatherApp() {
             comparePhotogenicForecastContent={compareLocationDetails?.photogenicForecastContent}
             compareAdditionalField={compareLocationDetails?.additionalField}
             comparePhotogenicForecastImages={compareLocationDetails?.photogenicForecastImages}
+            photogenicForecastLink={locationDetails?.photogenicForecastLink}
             comparePhotogenicForecastLink={compareLocationDetails?.photogenicForecastLink}
             compareBestTimeToVisit={compareLocationDetails?.bestTimeToVisit}
             showCompare={showCompare}

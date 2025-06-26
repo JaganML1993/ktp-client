@@ -278,43 +278,52 @@ function WeatherSummaryCard({
             </Typography>
 
             <Box sx={{ display: "flex", gap: 2, mt: 1, flexWrap: "wrap" }}>
-              {photogenicForecastImages?.map((src, idx) => (
-                <Box
-                  key={idx}
-                  component="a"
-                  href={photogenicForecastLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{
-                    borderRadius: 2,
-                    overflow: "hidden",
-                    display: "inline-block",
-                    transition: "transform 0.3s ease",
-                    "&:hover img": {
-                      transform: "scale(1.25)",
-                    },
-                  }}
-                >
-                  <img
-                    src={
-                      src.startsWith("http")
-                        ? src
-                        : `${process.env.REACT_APP_API_BASE_URL}/uploads/${src.replace(
-                            /^uploads[\\/]/,
-                            ""
-                          )}`
-                    }
-                    alt={`Photogenic ${idx + 1}`}
-                    width={100}
-                    height={70}
-                    style={{
-                      borderRadius: 8,
-                      objectFit: "cover",
+              {photogenicForecastImages?.map((src, idx) => {
+                const imageUrl = src.startsWith("http")
+                  ? src
+                  : `${process.env.REACT_APP_API_BASE_URL}/uploads/${src.replace(
+                      /^uploads[\\/]/,
+                      ""
+                    )}`;
+
+                const link =
+                  photogenicForecastLink && photogenicForecastLink !== "#"
+                    ? photogenicForecastLink
+                    : null;
+
+                return (
+                  <Box
+                    key={idx}
+                    component="a"
+                    href={link || undefined}
+                    target={link ? "_blank" : undefined}
+                    rel={link ? "noopener noreferrer" : undefined}
+                    sx={{
+                      borderRadius: 2,
+                      overflow: "hidden",
+                      display: "inline-block",
                       transition: "transform 0.3s ease",
+                      pointerEvents: link ? "auto" : "none",
+                      opacity: link ? 1 : 0.6,
+                      "&:hover img": {
+                        transform: link ? "scale(1.25)" : "none",
+                      },
                     }}
-                  />
-                </Box>
-              ))}
+                  >
+                    <img
+                      src={imageUrl}
+                      alt={`Photogenic ${idx + 1}`}
+                      width={100}
+                      height={70}
+                      style={{
+                        borderRadius: 8,
+                        objectFit: "cover",
+                        transition: "transform 0.3s ease",
+                      }}
+                    />
+                  </Box>
+                );
+              })}
             </Box>
           </Box>
 
@@ -517,106 +526,6 @@ function WeatherSummaryCard({
                 {description}
               </Typography>
             </Box>
-            {/* Add Hourly Forecast here */}
-            <Box mt={2}>
-              <HourlyForecast hourlyData={hourlyData} />
-            </Box>
-            {/* Packing Suggestions */}
-            {dangerAlert && (
-              <Box
-                mt={2}
-                sx={{
-                  backgroundColor: "#fff4e5",
-                  p: 2,
-                  borderRadius: 2,
-                  border: "1px solid #ffa726",
-                }}
-              >
-                <Typography variant="subtitle2" fontWeight="bold" color="error.main" gutterBottom>
-                  ⚠️ Danger Alert
-                </Typography>
-                <Typography variant="body2" component="div" color="text.primary">
-                  <SafeHtml html={dangerAlert} />
-                </Typography>
-              </Box>
-            )}
-
-            {temperature !== null && (
-              <Box mt={2}>
-                <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                  What to pack?
-                </Typography>
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                  {getPackingSuggestions(temperature, description)}
-                </Box>
-                {/* Itinerary Tip Section */}
-                <Box mt={1}>
-                  <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
-                    Itinerary Tip:
-                  </Typography>
-                  <Typography variant="body2" component="div" color="text.primary">
-                    <SafeHtml html={itineraryTip} />
-                  </Typography>
-                </Box>
-                <Box mt={1}>
-                  <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
-                    Photogenic Forecast
-                  </Typography>
-                  <Typography variant="body2" component="div" color="text.primary" gutterBottom>
-                    <SafeHtml html={photogenicForecastContent} />
-                  </Typography>
-
-                  <Box sx={{ display: "flex", gap: 2, mt: 1, flexWrap: "wrap" }}>
-                    {photogenicForecastImages?.map((src, idx) => (
-                      <Box
-                        key={idx}
-                        component="a"
-                        href={photogenicForecastLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          borderRadius: 2,
-                          overflow: "hidden",
-                          display: "inline-block",
-                          transition: "transform 0.3s ease",
-                          "&:hover img": {
-                            transform: "scale(1.25)",
-                          },
-                        }}
-                      >
-                        <img
-                          src={
-                            src.startsWith("http")
-                              ? src
-                              : `${process.env.REACT_APP_API_BASE_URL}/uploads/${src.replace(
-                                  /^uploads[\\/]/,
-                                  ""
-                                )}`
-                          }
-                          alt={`Photogenic ${idx + 1}`}
-                          width={100}
-                          height={70}
-                          style={{
-                            borderRadius: 8,
-                            objectFit: "cover",
-                            transition: "transform 0.3s ease",
-                          }}
-                        />
-                      </Box>
-                    ))}
-                  </Box>
-                </Box>
-
-                <Box mt={1}>
-                  <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
-                    {additionalField}
-                  </Typography>
-                  <Typography variant="body2" component="div" color="text.primary" gutterBottom>
-                    <SafeHtml html={bestTimeToVisit} />
-                  </Typography>
-                </Box>
-              </Box>
-            )}
 
             {showMap && (
               <Zoom in={showMap} mountOnEnter unmountOnExit>
@@ -678,6 +587,116 @@ function WeatherSummaryCard({
                   />
                 </Box>
               </Zoom>
+            )}
+
+            {/* Add Hourly Forecast here */}
+            <Box mt={2}>
+              <HourlyForecast hourlyData={hourlyData} />
+            </Box>
+            {/* Packing Suggestions */}
+            {dangerAlert && (
+              <Box
+                mt={2}
+                sx={{
+                  backgroundColor: "#fff4e5",
+                  p: 2,
+                  borderRadius: 2,
+                  border: "1px solid #ffa726",
+                }}
+              >
+                <Typography variant="subtitle2" fontWeight="bold" color="error.main" gutterBottom>
+                  ⚠️ Danger Alert
+                </Typography>
+                <Typography variant="body2" component="div" color="text.primary">
+                  <SafeHtml html={dangerAlert} />
+                </Typography>
+              </Box>
+            )}
+
+            {temperature !== null && (
+              <Box mt={2}>
+                <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                  What to pack?
+                </Typography>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                  {getPackingSuggestions(temperature, description)}
+                </Box>
+                {/* Itinerary Tip Section */}
+                <Box mt={1}>
+                  <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
+                    Itinerary Tip:
+                  </Typography>
+                  <Typography variant="body2" component="div" color="text.primary">
+                    <SafeHtml html={itineraryTip} />
+                  </Typography>
+                </Box>
+                <Box mt={1}>
+                  <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
+                    Photogenic Forecast
+                  </Typography>
+                  <Typography variant="body2" component="div" color="text.primary" gutterBottom>
+                    <SafeHtml html={photogenicForecastContent} />
+                  </Typography>
+
+                  <Box sx={{ display: "flex", gap: 2, mt: 1, flexWrap: "wrap" }}>
+                    {photogenicForecastImages?.map((src, idx) => {
+                      const imageUrl = src.startsWith("http")
+                        ? src
+                        : `${process.env.REACT_APP_API_BASE_URL}/uploads/${src.replace(
+                            /^uploads[\\/]/,
+                            ""
+                          )}`;
+
+                      const isValidLink =
+                        photogenicForecastLink &&
+                        photogenicForecastLink.trim() !== "" &&
+                        photogenicForecastLink !== "#";
+
+                      return (
+                        <Box
+                          key={idx}
+                          component={isValidLink ? "a" : "div"}
+                          href={isValidLink ? photogenicForecastLink : undefined}
+                          target={isValidLink ? "_blank" : undefined}
+                          rel={isValidLink ? "noopener noreferrer" : undefined}
+                          sx={{
+                            borderRadius: 2,
+                            overflow: "hidden",
+                            display: "inline-block",
+                            transition: "transform 0.3s ease",
+                            pointerEvents: isValidLink ? "auto" : "none",
+                            opacity: isValidLink ? 1 : 0.6,
+                            "&:hover img": {
+                              transform: isValidLink ? "scale(1.25)" : "none",
+                            },
+                          }}
+                        >
+                          <img
+                            src={imageUrl}
+                            alt={`Photogenic ${idx + 1}`}
+                            width={100}
+                            height={70}
+                            style={{
+                              borderRadius: 8,
+                              objectFit: "cover",
+                              transition: "transform 0.3s ease",
+                            }}
+                          />
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                </Box>
+
+                <Box mt={1}>
+                  <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
+                    {additionalField}
+                  </Typography>
+                  <Typography variant="body2" component="div" color="text.primary" gutterBottom>
+                    <SafeHtml html={bestTimeToVisit} />
+                  </Typography>
+                </Box>
+              </Box>
             )}
           </>
         ) : (
