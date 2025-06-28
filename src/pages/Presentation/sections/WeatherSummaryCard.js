@@ -243,9 +243,17 @@ function WeatherSummaryCard({
         {locationDetails.dangerAlert && (
           <Box
             mt={2}
-            sx={{ backgroundColor: "#fff4e5", p: 2, borderRadius: 2, border: "1px solid #ffa726" }}
+            sx={{ backgroundColor: "rgba(0,0,0,0.08) !important", p: 2, borderRadius: 2 }}
           >
-            <Typography variant="subtitle2" fontWeight="bold" color="error.main" gutterBottom>
+            <Typography
+              variant="subtitle2"
+              fontWeight="bold"
+              sx={{
+                color: "red !important",
+              }}
+              color="error.main"
+              gutterBottom
+            >
               ⚠️ Danger Alert
             </Typography>
             <Typography variant="body2" component="div" color="text.primary">
@@ -376,6 +384,9 @@ function WeatherSummaryCard({
       fontWeight: 500,
       color: theme.palette.primary.main,
     },
+    "& input": {
+      color: "#e9e9e9", // This sets the text color of the input
+    },
   };
 
   return (
@@ -384,7 +395,7 @@ function WeatherSummaryCard({
         width: "100%",
         borderRadius: 3,
         boxShadow: 4,
-        background: "linear-gradient(-225deg, #884D80 0%, #A8BFFF 100%)",
+        background: "linear-gradient(-225deg, #CBBACC 0%, #2580B3 100%);",
         transition: "transform 0.3s ease, box-shadow 0.3s ease",
         "&:hover": { transform: "translateY(-5px)", boxShadow: 6 },
       }}
@@ -426,7 +437,13 @@ function WeatherSummaryCard({
                 if (newValue) onCityChange(newValue);
               }}
               renderInput={(params) => (
-                <TextField {...params} label="Select City" variant="outlined" fullWidth />
+                <TextField
+                  {...params}
+                  sx={{ color: "#c8c8c8 !important" }}
+                  label="Select City"
+                  variant="outlined"
+                  fullWidth
+                />
               )}
               isOptionEqualToValue={(option, value) => option.id === value?.id}
             />
@@ -459,7 +476,13 @@ function WeatherSummaryCard({
                   value={compareCity || null}
                   onChange={(event, newValue) => onCompareCityChange(newValue)}
                   renderInput={(params) => (
-                    <TextField {...params} label="Compare City" variant="outlined" fullWidth />
+                    <TextField
+                      {...params}
+                      label="Compare City"
+                      variant="outlined"
+                      fullWidth
+                      InputLabelProps={{ shrink: true }} // optional
+                    />
                   )}
                   isOptionEqualToValue={(option, value) => option.id === value?.id}
                 />
@@ -619,13 +642,21 @@ function WeatherSummaryCard({
               <Box
                 mt={2}
                 sx={{
-                  backgroundColor: "#fff4e5",
+                  backgroundColor: "rgba(0,0,0,0.08) !important",
                   p: 2,
                   borderRadius: 2,
-                  border: "1px solid #ffa726",
+                  color: "red",
+                  // border: "1px solid #ffa726",
                 }}
               >
-                <Typography variant="subtitle2" fontWeight="bold" color="error.main" gutterBottom>
+                <Typography
+                  variant="subtitle2"
+                  fontWeight="bold"
+                  sx={{
+                    color: "red !important",
+                  }}
+                  gutterBottom
+                >
                   ⚠️ Danger Alert
                 </Typography>
                 <Typography variant="body2" component="div" color="text.primary">

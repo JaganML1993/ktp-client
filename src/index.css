@@ -14,38 +14,34 @@
   color: red;
 }
 
-.copyright_text{
-    margin: 0;
-    text-align: center;
-    font-size: 18px;
-    font-weight: 500;
-    color:#424242;
+.copyright_text {
+  margin: 0;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: #424242;
 }
-.get_the_tour{
-    margin-left: 30px;
-    background-color:#59b10a;
-    text-transform:uppercase;
-    font-size:14px;
-    font-weight:600;
-    color:#eceeef;
-    padding:18px 60px 15px;
+.get_the_tour {
+  margin-left: 30px;
+  background-color: #59b10a;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 600;
+  color: #eceeef;
+  padding: 18px 60px 15px;
 }
 
 .title_icon {
   display: block;
 }
-.content_background{
+.content_background {
   /* background-image: url("../src/assets/images/bg13.jpg");  */
   /* background-size: cover; */
   /* background-position: center; */
-  background-color: transparent  !important;
+  /* background-color: transparent  !important; */
   border-radius: 20px;
-  padding-left: 0;
-  padding-right: 0;
-  padding-top: 24px;
-  padding-bottom: 16px; /* pb: 2 × 8px */
-  margin-bottom: 0;
-  margin-top: 0;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
 @media (max-width: 768px) {
   .title_icon {
@@ -53,38 +49,52 @@
   }
   .content_background {
     /* background-image: none !important; */
-    background-color: transparent ;
+    background-color: transparent !important ;
     padding-top: 0px;
     padding-bottom: 0px;
   }
 }
-p{
-    color: white !important;
+p {
+  color: white !important;
 }
 
-h1,h2, h3,h4,h5,h6{
-    color: white !important;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: white !important;
 }
 
 /* span{
     color:white !important;
 } */
 
-
-.weather_section{
-    background-color: transparent !important;
+.weather_section {
+  background-color: none !important;
+  box-shadow: none !important;
 }
 
-.temperature_section, .pack_section{
-    background: rgba(0, 0, 0, 0.08) !important;
-    padding:4%;
-    border-radius: 10px;
+.temperature_section,
+.pack_section {
+  background: rgba(0, 0, 0, 0.08) !important;
+  padding: 4%;
+  border-radius: 10px;
 }
 
-.pack_section span, p ,h1 ,h2, h3,h4,h5,h6, div{
-    color: white !important;
+.pack_section span,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+div {
+  color: white !important;
 }
-.itinerary_section li{
-    margin-left: 20px !important
+.itinerary_section li {
+  margin-left: 20px !important;
 }
 

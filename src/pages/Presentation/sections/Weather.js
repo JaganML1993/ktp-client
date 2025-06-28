@@ -253,7 +253,7 @@ export default function WeatherApp() {
         className="content_background"
         justifyContent="center"
       >
-        <Grid item xs={12} md={10} lg={8}>
+        <Grid item xs={12} md={12} lg={12}>
           <WeatherSummaryCard
             temperature={weather.temperature}
             description={weather.description}
@@ -307,7 +307,7 @@ export default function WeatherApp() {
             width: isMobile ? "95%" : "80%",
             maxWidth: 800,
             maxHeight: "80vh",
-            background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+            background: "linear-gradient(-225deg, #CBBACC 0%, #2580B3 100%);",
             borderRadius: 3,
             boxShadow: 24,
             p: isMobile ? 1 : 3,
