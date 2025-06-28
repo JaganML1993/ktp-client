@@ -353,8 +353,8 @@ function WeatherSummaryCard({
     "& .MuiOutlinedInput-root": {
       height: 56,
       borderRadius: 2,
-      backgroundColor: "rgba(255, 255, 255, 0.7)",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+      backgroundColor: "transparent",
+      boxShadow: "0 2px 4px rgba(0,0,0,0.6)",
       "& .MuiSelect-select": {
         padding: "12px 32px 12px 16px",
         fontSize: "1rem",
