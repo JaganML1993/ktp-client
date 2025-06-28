@@ -76,7 +76,7 @@ h1,h2, h3,h4,h5,h6{
 }
 
 .temperature_section, .pack_section{
-    background: rgba(0, 0, 0, 0.08);
+    background: rgba(0, 0, 0, 0.08) !important;
     padding:4%;
     border-radius: 10px;
 }
