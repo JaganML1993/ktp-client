@@ -41,7 +41,7 @@
   border-radius: 20px;
   padding-left: 0;
   padding-right: 0;
-  /* padding-top: 24px; */
+  padding-top: 24px;
   padding-bottom: 16px; /* pb: 2 × 8px */
   margin-bottom: 0;
   margin-top: 0;
@@ -53,5 +53,7 @@
   .content_background {
     background-image: none !important;
     background-color: white !important;
+    padding-top: 0px;
+    padding-bottom: 0px;
   }
 }
