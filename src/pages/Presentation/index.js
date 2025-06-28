@@ -33,15 +33,42 @@ import "index.css";
 function Presentation() {
   const socials = [
     {
-      icon: <FacebookIcon sx={{ color: "#005596" }} />,
+      icon: (
+        <FacebookIcon
+          sx={{
+            color: "#a4cae5",
+            width: "18px",
+            height: "18px",
+            marginTop: "12px",
+          }}
+        />
+      ),
       link: "https://www.facebook.com/karnatakatravelplaces",
     },
     {
-      icon: <InstagramIcon sx={{ color: "#005596" }} />,
+      icon: (
+        <InstagramIcon
+          sx={{
+            color: "#a4cae5",
+            width: "18px",
+            height: "18px",
+            marginTop: "12px",
+          }}
+        />
+      ),
       link: "https://www.instagram.com/karnatakatravelplaces/",
     },
     {
-      icon: <YouTubeIcon sx={{ color: "#005596" }} />,
+      icon: (
+        <YouTubeIcon
+          sx={{
+            color: "#a4cae5",
+            width: "18px",
+            height: "18px",
+            marginTop: "12px",
+          }}
+        />
+      ),
       link: "https://www.youtube.com/@karnatakatravelplaces8251",
     },
   ];
@@ -58,19 +85,21 @@ function Presentation() {
         sx={{
           backgroundColor: "#005596",
           color: "#fff",
+          height: 50,
         }}
       >
         <MKTypography
           color="white"
           sx={{
             fontWeight: "500",
-            fontSize: "0.9rem",
-            pl: { xs: 0, lg: "50px" },
+            color: "#a4cae5",
+            fontSize: "14px",
+            pl: { xs: 0, lg: "100px" },
           }}
         >
           karnatakatravelplaces@gmail.com
         </MKTypography>
-        <MKBox display="flex" gap={1.5} sx={{ mr: { xs: 0, lg: "50px" } }}>
+        <MKBox display="flex" gap={3.5} sx={{ mr: { xs: 0, lg: "40px" } }}>
           {socials.map(({ icon, link }, index) => (
             <IconButton
               key={index}
@@ -79,16 +108,27 @@ function Presentation() {
               target="_blank"
               rel="noopener noreferrer"
               sx={{
-                backgroundColor: "#fff",
-                borderRadius: "50%",
-                width: 40,
-                height: 40,
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.15)",
+                // backgroundColor: "#fff",
+                // borderRadius: "50%",
+                width: "18px !important",
+                color: "#a4cae5",
+                height: "18px !important",
+                // boxShadow: "0 2px 4px rgba(0, 0, 0, 0.15)",
               }}
             >
               {icon}
             </IconButton>
           ))}
+          <span className="copyright_text">
+            <a
+              href="https://www.karnatakatravelplaces.com/contact.php"
+              className="get_the_tour"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Get the Tour Guide
+            </a>
+          </span>
         </MKBox>
       </MKBox>
 
