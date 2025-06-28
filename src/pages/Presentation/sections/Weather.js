@@ -307,7 +307,7 @@ export default function WeatherApp() {
             width: isMobile ? "95%" : "80%",
             maxWidth: 800,
             maxHeight: "80vh",
-            bgcolor: "background.paper",
+            background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
             borderRadius: 3,
             boxShadow: 24,
             p: isMobile ? 1 : 3,
@@ -316,8 +316,23 @@ export default function WeatherApp() {
             flexDirection: "column",
           }}
         >
-          <Tabs value={modalTab} onChange={handleTabChange} centered>
-            <Tab label={selectedCity?.name || "Selected City"} />
+          <Tabs
+            value={modalTab}
+            onChange={handleTabChange}
+            centered
+            sx={{
+              background: "white",
+              boxShadow: "0 12px 32px rgba(0, 0, 0, 0.15)",
+              padding: "0px !important",
+              borderRadius: "8px !important",
+            }}
+          >
+            <Tab
+              label={selectedCity?.name || "Selected City"}
+              sx={{
+                background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+              }}
+            />
             {compareCity && <Tab label={compareCity.name} />}
           </Tabs>
 

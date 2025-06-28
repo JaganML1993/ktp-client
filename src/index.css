@@ -35,9 +35,10 @@
   display: block;
 }
 .content_background{
-  background-image: url("../src/assets/images/bg13.jpg"); /* or none */
-  background-size: cover;
-  background-position: center;
+  /* background-image: url("../src/assets/images/bg13.jpg");  */
+  /* background-size: cover; */
+  /* background-position: center; */
+  background-color: transparent  !important;
   border-radius: 20px;
   padding-left: 0;
   padding-right: 0;
@@ -51,9 +52,39 @@
     display: none !important;
   }
   .content_background {
-    background-image: none !important;
-    background-color: white !important;
+    /* background-image: none !important; */
+    background-color: transparent ;
     padding-top: 0px;
     padding-bottom: 0px;
   }
 }
+p{
+    color: white !important;
+}
+
+h1,h2, h3,h4,h5,h6{
+    color: white !important;
+}
+
+/* span{
+    color:white !important;
+} */
+
+
+.weather_section{
+    background-color: transparent !important;
+}
+
+.temperature_section, .pack_section{
+    background: rgba(0, 0, 0, 0.08);
+    padding:4%;
+    border-radius: 10px;
+}
+
+.pack_section span, p ,h1 ,h2, h3,h4,h5,h6, div{
+    color: white !important;
+}
+.itinerary_section li{
+    margin-left: 20px !important
+}
+

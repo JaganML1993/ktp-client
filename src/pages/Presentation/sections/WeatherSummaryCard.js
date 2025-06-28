@@ -215,6 +215,7 @@ function WeatherSummaryCard({
               fontWeight: 300,
               fontSize: isMobile ? "2.5rem" : "3rem",
               lineHeight: 1,
+              color: "#43bf43 !important",
             }}
           >
             {temp}°
@@ -253,7 +254,7 @@ function WeatherSummaryCard({
           </Box>
         )}
 
-        <Box mt={2}>
+        <Box mt={2} className="pack_section">
           <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
             What to pack for {city.name}?
           </Typography>
@@ -265,7 +266,12 @@ function WeatherSummaryCard({
             <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
               Itinerary Tip:
             </Typography>
-            <Typography variant="body2" component="div" color="text.primary">
+            <Typography
+              variant="body2"
+              className="itinerary_section"
+              component="div"
+              color="text.primary"
+            >
               <SafeHtml html={itineraryTip} />
             </Typography>
           </Box>
@@ -378,7 +384,7 @@ function WeatherSummaryCard({
         width: "100%",
         borderRadius: 3,
         boxShadow: 4,
-        background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+        background: "linear-gradient(-225deg, #884D80 0%, #A8BFFF 100%)",
         transition: "transform 0.3s ease, box-shadow 0.3s ease",
         "&:hover": { transform: "translateY(-5px)", boxShadow: 6 },
       }}
@@ -470,6 +476,7 @@ function WeatherSummaryCard({
               position: "absolute",
               right: 8,
               fontWeight: "bold",
+              color: "#004C70",
             }}
             onClick={onViewForecast}
           >
@@ -479,20 +486,52 @@ function WeatherSummaryCard({
 
         {!showCompare ? (
           <>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              className="temperature_section"
+              alignItems="center"
+              mb={2}
+            >
               <Box>
-                <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
-                  {selectedCity?.name || "Select a city"}
+                <Box display="flex" alignItems="center">
+                  <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, mr: 1 }}>
+                    {selectedCity?.name || "Select a city"}
+                  </Typography>
                   <Tooltip title="Show location on map">
                     <IconButton onClick={toggleMap} size="small">
                       <LocationOnIcon sx={{ color: "error.main" }} />
                     </IconButton>
                   </Tooltip>
-                </Typography>
+                </Box>
                 <Typography variant="subtitle2" color="text.secondary">
                   {date}
                 </Typography>
+                <Box display="flex" alignItems="center" mt={2}>
+                  <Typography
+                    variant={isMobile ? "h3" : "h2"}
+                    color="#59b10a"
+                    sx={{
+                      fontWeight: 300,
+                      fontSize: isMobile ? "3rem" : "4rem",
+                      lineHeight: 1,
+                      textShadow: "1px 1px 3px rgba(0,0,0,0.1)",
+                      color: "#43bf43 !important",
+                      mr: 2,
+                    }}
+                  >
+                    {temperature}°
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    color="text.secondary"
+                    sx={{ textTransform: "capitalize" }}
+                  >
+                    {description}
+                  </Typography>
+                </Box>
               </Box>
+
               <img
                 src={iconUrl}
                 alt={description || "weather icon"}
@@ -508,24 +547,6 @@ function WeatherSummaryCard({
             </Box>
 
             <Divider sx={{ my: 2 }} />
-
-            <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-              <Typography
-                variant={isMobile ? "h3" : "h2"}
-                color="#59b10a"
-                sx={{
-                  fontWeight: 300,
-                  fontSize: isMobile ? "3rem" : "4rem",
-                  lineHeight: 1,
-                  textShadow: "1px 1px 3px rgba(0,0,0,0.1)",
-                }}
-              >
-                {temperature}°
-              </Typography>
-              <Typography variant="h6" color="text.secondary" sx={{ textTransform: "capitalize" }}>
-                {description}
-              </Typography>
-            </Box>
 
             {showMap && (
               <Zoom in={showMap} mountOnEnter unmountOnExit>
@@ -614,7 +635,7 @@ function WeatherSummaryCard({
             )}
 
             {temperature !== null && (
-              <Box mt={2}>
+              <Box mt={2} className="pack_section">
                 <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
                   What to pack?
                 </Typography>

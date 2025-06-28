@@ -22,7 +22,7 @@ function ForecastCards({ forecastData }) {
           sx={{
             p: 2,
             borderRadius: 3,
-            background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+            background: "linear-gradient(-225deg, #884D80 0%, #A8BFFF 100%)",
           }}
         >
           <Box
