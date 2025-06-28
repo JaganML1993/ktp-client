@@ -321,18 +321,14 @@ export default function WeatherApp() {
             onChange={handleTabChange}
             centered
             sx={{
-              background: "white",
+              background: "#2580B3",
               boxShadow: "0 12px 32px rgba(0, 0, 0, 0.15)",
               padding: "0px !important",
+              color: "red",
               borderRadius: "8px !important",
             }}
           >
-            <Tab
-              label={selectedCity?.name || "Selected City"}
-              sx={{
-                background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-              }}
-            />
+            <Tab label={selectedCity?.name || "Selected City"} />
             {compareCity && <Tab label={compareCity.name} />}
           </Tabs>
 

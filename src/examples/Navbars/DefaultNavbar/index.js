@@ -532,7 +532,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
             sx={{ cursor: "pointer" }}
             onClick={openMobileNavbar}
           >
-            <Icon fontSize="default">{mobileNavbar ? "close" : "menu"}</Icon>
+            {/* <Icon fontSize="default">{mobileNavbar ? "close" : "menu"}</Icon> */}
           </MKBox>
         </MKBox>
         <MKBox

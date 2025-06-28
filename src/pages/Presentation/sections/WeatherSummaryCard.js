@@ -184,20 +184,59 @@ function WeatherSummaryCard({
           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         }}
       >
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          className="temperature_section"
+          alignItems="center"
+          mb={2}
+        >
           <Box>
-            <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-              {city.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
+            {/* City Name + Map Icon */}
+            <Box display="flex" alignItems="center">
+              <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, mr: 1 }}>
+                {city?.name || "Select a city"}
+              </Typography>
+              <Tooltip title="Show location on map">
+                <IconButton onClick={toggleMap} size="small">
+                  <LocationOnIcon sx={{ color: "error.main" }} />
+                </IconButton>
+              </Tooltip>
+            </Box>
+
+            {/* Date/Time */}
+            <Typography variant="subtitle2" color="text.secondary">
               {dt}
             </Typography>
+
+            {/* Temperature + Description */}
+            <Box display="flex" alignItems="center" mt={2}>
+              <Typography
+                variant={isMobile ? "h3" : "h2"}
+                color="#59b10a"
+                sx={{
+                  fontWeight: 300,
+                  fontSize: isMobile ? "3rem" : "4rem",
+                  lineHeight: 1,
+                  textShadow: "1px 1px 3px rgba(0,0,0,0.1)",
+                  color: "#43bf43 !important",
+                  mr: 2,
+                }}
+              >
+                {temp}°
+              </Typography>
+              <Typography variant="h6" color="text.secondary" sx={{ textTransform: "capitalize" }}>
+                {desc}
+              </Typography>
+            </Box>
           </Box>
+
+          {/* Weather Icon */}
           <img
             src={iconUrl}
             alt={desc || "weather icon"}
-            width={isMobile ? 40 : 60}
-            height={isMobile ? 40 : 60}
+            width={isMobile ? 60 : 80}
+            height={isMobile ? 60 : 80}
             style={{
               filter: "drop-shadow(2px 4px 6px rgba(0,0,0,0.1))",
             }}
@@ -207,23 +246,7 @@ function WeatherSummaryCard({
           />
         </Box>
         <Divider sx={{ my: 1 }} />
-        <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Typography
-            variant={isMobile ? "h4" : "h3"}
-            color="primary"
-            sx={{
-              fontWeight: 300,
-              fontSize: isMobile ? "2.5rem" : "3rem",
-              lineHeight: 1,
-              color: "#43bf43 !important",
-            }}
-          >
-            {temp}°
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ textTransform: "capitalize" }}>
-            {desc}
-          </Typography>
-        </Box>
+
         {/* Hourly Forecast Section */}
         <Box mt={2}>
           {weatherData.hourly && weatherData.hourly.length > 0 ? (
@@ -357,7 +380,11 @@ function WeatherSummaryCard({
   // Common styles for all form controls
   const formControlStyles = {
     flex: isMobile ? "none" : 1,
-    minWidth: isMobile ? 250 : 180,
+    minWidth: {
+      xs: 220, // extra small screens (e.g. phones)
+      sm: 220, // small screens (e.g. tablets)
+      md: 180, // medium screens and up
+    },
     "& .MuiOutlinedInput-root": {
       height: 56,
       borderRadius: 2,
@@ -583,7 +610,7 @@ function WeatherSummaryCard({
                       top: 8,
                       right: 8,
                       zIndex: 3,
-                      backgroundColor: "rgba(255, 255, 255, 0.8)",
+                      // backgroundColor: "rgba(255, 255, 255, 0.8)",
                       "&:hover": {
                         backgroundColor: "rgba(255, 255, 255, 1)",
                       },
