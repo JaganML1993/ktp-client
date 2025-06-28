@@ -343,7 +343,7 @@ function WeatherSummaryCard({
   // Common styles for all form controls
   const formControlStyles = {
     flex: isMobile ? "none" : 1,
-    minWidth: 180,
+    minWidth: isMobile ? 250 : 180,
     "& .MuiOutlinedInput-root": {
       height: 56,
       borderRadius: 2,
@@ -512,7 +512,7 @@ function WeatherSummaryCard({
             <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
               <Typography
                 variant={isMobile ? "h3" : "h2"}
-                color="primary"
+                color="#59b10a"
                 sx={{
                   fontWeight: 300,
                   fontSize: isMobile ? "3rem" : "4rem",
@@ -626,7 +626,14 @@ function WeatherSummaryCard({
                   <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
                     Itinerary Tip:
                   </Typography>
-                  <Typography variant="body2" component="div" color="text.primary">
+                  <Typography
+                    variant="body2"
+                    component="div"
+                    sx={{
+                      marginLeft: "20px !important",
+                    }}
+                    color="text.primary"
+                  >
                     <SafeHtml html={itineraryTip} />
                   </Typography>
                 </Box>

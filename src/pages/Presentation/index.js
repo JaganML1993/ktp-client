@@ -99,7 +99,15 @@ function Presentation() {
         >
           karnatakatravelplaces@gmail.com
         </MKTypography>
-        <MKBox display="flex" gap={3.5} sx={{ mr: { xs: 0, lg: "40px" } }}>
+        <MKBox
+          display="flex"
+          className="title_icon"
+          gap={3.5}
+          sx={{
+            mr: { xs: 0, lg: "40px" }, // Right margin is 0 on extra-small screens, 40px on large+
+            // display: { xs: "none", md: "block" }, // Hidden on extra-small and small screens, shown from medium up
+          }}
+        >
           {socials.map(({ icon, link }, index) => (
             <IconButton
               key={index}

@@ -30,3 +30,28 @@
     color:#eceeef;
     padding:18px 60px 15px;
 }
+
+.title_icon {
+  display: block;
+}
+.content_background{
+  background-image: url("../src/assets/images/bg13.jpg"); /* or none */
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  padding-left: 0;
+  padding-right: 0;
+  /* padding-top: 24px; */
+  padding-bottom: 16px; /* pb: 2 × 8px */
+  margin-bottom: 0;
+  margin-top: 0;
+}
+@media (max-width: 768px) {
+  .title_icon {
+    display: none !important;
+  }
+  .content_background {
+    background-image: none !important;
+    background-color: white !important;
+  }
+}

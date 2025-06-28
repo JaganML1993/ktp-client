@@ -247,7 +247,12 @@ export default function WeatherApp() {
 
   return (
     <>
-      <Grid container spacing={3} justifyContent="center" sx={{ mt: 2 }}>
+      <Grid
+        container
+        // spacing={3}
+        className="content_background"
+        justifyContent="center"
+      >
         <Grid item xs={12} md={10} lg={8}>
           <WeatherSummaryCard
             temperature={weather.temperature}
