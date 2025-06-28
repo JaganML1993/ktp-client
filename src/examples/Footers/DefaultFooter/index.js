@@ -14,7 +14,8 @@ function DefaultFooter({ content }) {
     <MKBox
       component="footer"
       sx={{
-        // paddingTop: "43.5px !important",
+        // paddingTop: "0px !important",
+        marginTop: "0px !important",
         paddingleft: "20px",
         backgroundColor: "#eceeef !important",
       }}
