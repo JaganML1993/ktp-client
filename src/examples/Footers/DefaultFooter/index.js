@@ -1,10 +1,11 @@
 // import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
+import { Grid, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
+import myImage from "assets/images/Untitled.svg";
 
 function DefaultFooter({ content }) {
   const { socials, copyright } = content;
@@ -13,16 +14,25 @@ function DefaultFooter({ content }) {
     <MKBox
       component="footer"
       sx={{
-        paddingTop: "35px !important",
-        paddingBottom: "35px !important",
-        backgroundColor: "#082740 !important",
+        // paddingTop: "43.5px !important",
+        paddingleft: "20px",
+        backgroundColor: "#eceeef !important",
       }}
     >
-      <Container>
+      <Container
+        sx={{
+          paddingTop: { xs: "10px", md: "43.5px" },
+          paddingBottom: { xs: "10px", md: "43.5px" },
+        }}
+      >
         <Grid container justifyContent="space-between" alignItems="center">
           {/* Left: Copyright Text */}
           <Grid item xs={12} md={6}>
-            <MKTypography variant="body2" color="white" align="left">
+            <MKTypography
+              color="black"
+              align="left"
+              sx={{ marginLeft: { xs: "10px", md: "22.5px" } }}
+            >
               {copyright}
             </MKTypography>
           </Grid>
@@ -59,6 +69,48 @@ function DefaultFooter({ content }) {
               ))}
             </MKBox>
           </Grid>
+        </Grid>
+      </Container>
+      <Container
+        sx={{
+          backgroundColor: "white !important",
+          display: { xs: "none", md: "block" }, // Hides on xs (mobile), shows on md+
+        }}
+      >
+        <Grid item xs={12} md={10}>
+          <Typography
+            color="black"
+            align="center"
+            component="div"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            maxHeight="35px"
+          >
+            <img src={myImage} alt="Description" className="footer-logo" />
+            <span
+              style={{
+                borderLeft: "1px solid grey",
+                height: "25px",
+                marginTop: "25px",
+                marginBottom: "25px",
+                marginRight: "20px",
+                display: "inline-block",
+              }}
+            ></span>
+            <span
+              style={{
+                color: "#454545",
+                fontWeight: "400",
+                fontFamily: "inherit",
+                lineHeight: "1.3rem",
+                fontStyle: "inherit",
+                fontSize: "16px",
+              }}
+            >
+              Automated page speed optimizations for fast site performance
+            </span>
+          </Typography>
         </Grid>
       </Container>
     </MKBox>

@@ -1,0 +1,23 @@
+.footer-logo {
+  width: 110px;
+  max-height: 45px;
+  margin-right: 40px;
+}
+
+.karnataka-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.karnataka-link:hover {
+  color: red;
+}
+
+.copyright_text{
+    margin: 0;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    color:#424242;
+}
