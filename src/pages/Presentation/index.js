@@ -141,7 +141,7 @@ function Presentation() {
       </MKBox>
 
       {/* Navigation Bar */}
-      <DefaultNavbar routes={routes} action={null} sticky />
+      <DefaultNavbar routes={routes} action={null} />
 
       {/* Hero Section */}
       <MKBox
