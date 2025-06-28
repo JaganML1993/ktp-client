@@ -732,7 +732,13 @@ function WeatherSummaryCard({
                   <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
                     Photogenic Forecast
                   </Typography>
-                  <Typography variant="body2" component="div" color="text.primary" gutterBottom>
+                  <Typography
+                    variant="body2"
+                    className="itinerary_section"
+                    component="div"
+                    color="text.primary"
+                    gutterBottom
+                  >
                     <SafeHtml html={photogenicForecastContent} />
                   </Typography>
 
@@ -790,7 +796,13 @@ function WeatherSummaryCard({
                   <Typography variant="subtitle2" component="div" fontWeight="bold" gutterBottom>
                     {additionalField}
                   </Typography>
-                  <Typography variant="body2" component="div" color="text.primary" gutterBottom>
+                  <Typography
+                    variant="body2"
+                    className="itinerary_section"
+                    component="div"
+                    color="text.primary"
+                    gutterBottom
+                  >
                     <SafeHtml html={bestTimeToVisit} />
                   </Typography>
                 </Box>
