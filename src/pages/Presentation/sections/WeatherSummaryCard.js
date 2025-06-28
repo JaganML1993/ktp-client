@@ -180,8 +180,8 @@ function WeatherSummaryCard({
           width: "100%",
           p: 2,
           borderRadius: 2,
-          backgroundColor: "rgba(0, 0, 0, 0.08)",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          // backgroundColor: "rgba(0, 0, 0, 0.08)",
+          // boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         }}
       >
         <Box
@@ -197,11 +197,11 @@ function WeatherSummaryCard({
               <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, mr: 1 }}>
                 {city?.name || "Select a city"}
               </Typography>
-              <Tooltip title="Show location on map">
+              {/* <Tooltip title="Show location on map">
                 <IconButton onClick={toggleMap} size="small">
                   <LocationOnIcon sx={{ color: "error.main" }} />
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
             </Box>
 
             {/* Date/Time */}
@@ -254,7 +254,7 @@ function WeatherSummaryCard({
               <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
                 Hourly Forecast for {city.name}
               </Typography>
-              <HourlyForecast hourlyData={weatherData.hourly} />
+              {/* <HourlyForecast hourlyData={weatherData.hourly} /> */}
             </>
           ) : (
             <Typography variant="body2" color="text.secondary">
