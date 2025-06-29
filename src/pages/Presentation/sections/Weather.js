@@ -253,7 +253,7 @@ export default function WeatherApp() {
         className="content_background"
         justifyContent="center"
       >
-        <Grid item xs={12} md={12} lg={12}>
+        <Grid item xs={12} md={12} lg={10}>
           <WeatherSummaryCard
             temperature={weather.temperature}
             description={weather.description}

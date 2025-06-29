@@ -1,11 +1,11 @@
 // import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Container from "@mui/material/Container";
-import { Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
-import myImage from "assets/images/Untitled.svg";
+// import myImage from "assets/images/Untitled.svg";
 
 function DefaultFooter({ content }) {
   const { socials, copyright } = content;
@@ -78,7 +78,7 @@ function DefaultFooter({ content }) {
           display: { xs: "none", md: "block" }, // Hides on xs (mobile), shows on md+
         }}
       >
-        <Grid item xs={12} md={10}>
+        {/* <Grid item xs={12} md={10}>
           <Typography
             color="black"
             align="center"
@@ -112,7 +112,7 @@ function DefaultFooter({ content }) {
               Automated page speed optimizations for fast site performance
             </span>
           </Typography>
-        </Grid>
+        </Grid> */}
       </Container>
     </MKBox>
   );

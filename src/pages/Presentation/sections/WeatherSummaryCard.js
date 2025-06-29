@@ -251,10 +251,7 @@ function WeatherSummaryCard({
         <Box mt={2}>
           {weatherData.hourly && weatherData.hourly.length > 0 ? (
             <>
-              <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                Hourly Forecast for {city.name}
-              </Typography>
-              {/* <HourlyForecast hourlyData={weatherData.hourly} /> */}
+              <HourlyForecast hourlyData={weatherData.hourly} />
             </>
           ) : (
             <Typography variant="body2" color="text.secondary">
@@ -329,10 +326,7 @@ function WeatherSummaryCard({
                       ""
                     )}`;
 
-                const link =
-                  photogenicForecastLink && photogenicForecastLink !== "#"
-                    ? photogenicForecastLink
-                    : null;
+                const link = photogenicForecastLink || "#";
 
                 return (
                   <Box
@@ -346,8 +340,8 @@ function WeatherSummaryCard({
                       overflow: "hidden",
                       display: "inline-block",
                       transition: "transform 0.3s ease",
-                      pointerEvents: link ? "auto" : "none",
-                      opacity: link ? 1 : 0.6,
+                      pointerEvents: "auto",
+                      opacity: 1,
                       "&:hover img": {
                         transform: link ? "scale(1.25)" : "none",
                       },
@@ -751,10 +745,7 @@ function WeatherSummaryCard({
                             ""
                           )}`;
 
-                      const isValidLink =
-                        photogenicForecastLink &&
-                        photogenicForecastLink.trim() !== "" &&
-                        photogenicForecastLink !== "#";
+                      const isValidLink = photogenicForecastLink || "#";
 
                       return (
                         <Box
@@ -768,8 +759,8 @@ function WeatherSummaryCard({
                             overflow: "hidden",
                             display: "inline-block",
                             transition: "transform 0.3s ease",
-                            pointerEvents: isValidLink ? "auto" : "none",
-                            opacity: isValidLink ? 1 : 0.6,
+                            pointerEvents: "auto",
+                            opacity: 1,
                             "&:hover img": {
                               transform: isValidLink ? "scale(1.25)" : "none",
                             },
