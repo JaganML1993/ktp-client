@@ -332,7 +332,7 @@ function WeatherSummaryCard({
                   <Box
                     key={idx}
                     component="a"
-                    href={link || undefined}
+                    href={imageUrl}
                     target={link ? "_blank" : undefined}
                     rel={link ? "noopener noreferrer" : undefined}
                     sx={{
@@ -751,7 +751,7 @@ function WeatherSummaryCard({
                         <Box
                           key={idx}
                           component={isValidLink ? "a" : "div"}
-                          href={isValidLink ? photogenicForecastLink : undefined}
+                          href={imageUrl}
                           target={isValidLink ? "_blank" : undefined}
                           rel={isValidLink ? "noopener noreferrer" : undefined}
                           sx={{
