@@ -476,6 +476,12 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
             lineHeight={1}
             py={transparent ? 1.5 : 0.75}
             pl={relative || transparent ? 0 : { xs: 0, lg: 1 }}
+            sx={({ breakpoints }) => ({
+              pl: 0,
+              [breakpoints.up("lg")]: {
+                pl: "-100px",
+              },
+            })}
           >
             <MKTypography variant="button" fontWeight="bold" color={light ? "white" : "dark"}>
               <img src={logo} alt={brand} style={{ height: 40 }} />
