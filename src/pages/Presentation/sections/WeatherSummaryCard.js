@@ -326,24 +326,28 @@ function WeatherSummaryCard({
                       ""
                     )}`;
 
-                const link = photogenicForecastLink || "#";
+                const decodedLink = photogenicForecastLink
+                  ? photogenicForecastLink.replace(/&#x2F;/g, "/").replace(/&amp;/g, "&")
+                  : null;
+
+                const isValidLink = decodedLink && decodedLink !== "#" && decodedLink.trim() !== "";
 
                 return (
                   <Box
                     key={idx}
-                    component="a"
-                    href={imageUrl}
-                    target={link ? "_blank" : undefined}
-                    rel={link ? "noopener noreferrer" : undefined}
+                    component={isValidLink ? "a" : "div"}
+                    href={isValidLink ? decodedLink : undefined}
+                    target={isValidLink ? "_blank" : undefined}
+                    rel={isValidLink ? "noopener noreferrer" : undefined}
                     sx={{
                       borderRadius: 2,
                       overflow: "hidden",
                       display: "inline-block",
                       transition: "transform 0.3s ease",
-                      pointerEvents: "auto",
-                      opacity: 1,
+                      pointerEvents: isValidLink ? "auto" : "none",
+                      opacity: isValidLink ? 1 : 0.6,
                       "&:hover img": {
-                        transform: link ? "scale(1.25)" : "none",
+                        transform: isValidLink ? "scale(1.25)" : "none",
                       },
                     }}
                   >
@@ -745,13 +749,18 @@ function WeatherSummaryCard({
                             ""
                           )}`;
 
-                      const isValidLink = photogenicForecastLink || "#";
+                      const decodedLink = photogenicForecastLink
+                        ? he.decode(photogenicForecastLink)
+                        : null;
+
+                      const isValidLink =
+                        decodedLink && decodedLink !== "#" && decodedLink.trim() !== "";
 
                       return (
                         <Box
                           key={idx}
                           component={isValidLink ? "a" : "div"}
-                          href={imageUrl}
+                          href={isValidLink ? decodedLink : undefined}
                           target={isValidLink ? "_blank" : undefined}
                           rel={isValidLink ? "noopener noreferrer" : undefined}
                           sx={{
@@ -759,8 +768,8 @@ function WeatherSummaryCard({
                             overflow: "hidden",
                             display: "inline-block",
                             transition: "transform 0.3s ease",
-                            pointerEvents: "auto",
-                            opacity: 1,
+                            pointerEvents: isValidLink ? "auto" : "none",
+                            opacity: isValidLink ? 1 : 0.6,
                             "&:hover img": {
                               transform: isValidLink ? "scale(1.25)" : "none",
                             },
