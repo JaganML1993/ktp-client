@@ -307,7 +307,7 @@ export default function WeatherApp() {
             width: isMobile ? "95%" : "80%",
             maxWidth: 800,
             maxHeight: "80vh",
-            background: "linear-gradient(-225deg, #CBBACC 0%, #2580B3 100%);",
+            background: "linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);",
             borderRadius: 3,
             boxShadow: 24,
             p: isMobile ? 1 : 3,
@@ -321,7 +321,7 @@ export default function WeatherApp() {
             onChange={handleTabChange}
             centered
             sx={{
-              background: "#2580B3",
+              background: "#728cba",
               boxShadow: "0 12px 32px rgba(0, 0, 0, 0.15)",
               padding: "0px !important",
               color: "red",

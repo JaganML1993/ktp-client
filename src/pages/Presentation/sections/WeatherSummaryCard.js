@@ -269,7 +269,7 @@ function WeatherSummaryCard({
               variant="subtitle2"
               fontWeight="bold"
               sx={{
-                color: "red !important",
+                color: "#bb3030 !important",
               }}
               color="error.main"
               gutterBottom
@@ -432,7 +432,7 @@ function WeatherSummaryCard({
         width: "100%",
         borderRadius: 3,
         boxShadow: 4,
-        background: "linear-gradient(-225deg, #CBBACC 0%, #2580B3 100%);",
+        background: "linear-gradient(-225deg, #7085B6 0%, #87A7D9 50%, #DEF3F8 100%)",
         transition: "transform 0.3s ease, box-shadow 0.3s ease",
         "&:hover": { transform: "translateY(-5px)", boxShadow: 6 },
       }}
@@ -690,7 +690,7 @@ function WeatherSummaryCard({
                   variant="subtitle2"
                   fontWeight="bold"
                   sx={{
-                    color: "red !important",
+                    color: "#bb3030 !important",
                   }}
                   gutterBottom
                 >
