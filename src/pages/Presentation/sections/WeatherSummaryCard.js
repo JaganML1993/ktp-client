@@ -432,7 +432,7 @@ function WeatherSummaryCard({
         width: "100%",
         borderRadius: 3,
         boxShadow: 4,
-        background: "linear-gradient(-225deg, #CBBACC 0%, #2580B3 100%);",
+        background: "linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);",
         transition: "transform 0.3s ease, box-shadow 0.3s ease",
         "&:hover": { transform: "translateY(-5px)", boxShadow: 6 },
       }}
