@@ -54,22 +54,6 @@
     padding-bottom: 0px;
   }
 }
-p {
-  color: white !important;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: white !important;
-}
-
-/* span{
-    color:white !important;
-} */
 
 .weather_section {
   background-color: none !important;
@@ -83,17 +67,6 @@ h6 {
   border-radius: 10px;
 }
 
-.pack_section span,
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-div {
-  color: white !important;
-}
 .itinerary_section li {
   margin-left: 20px !important;
 }
