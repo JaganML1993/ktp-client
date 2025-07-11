@@ -22,8 +22,7 @@ function ForecastCards({ forecastData }) {
           sx={{
             p: 2,
             borderRadius: 3,
-            background:
-              "linear-gradient(to left, #BDBBBE 0%, #9D9EA3 100%), radial-gradient(88% 271%, rgba(255, 255, 255, 0.25) 0%, rgba(254, 254, 254, 0.25) 1%, rgba(0, 0, 0, 0.25) 100%), radial-gradient(50% 100%, rgba(255, 255, 255, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%)",
+            background: "linear-gradient(to top, #c4c5c7 0%, #dcdddf 52%, #ebebeb 100%)",
           }}
         >
           <Box
@@ -38,11 +37,20 @@ function ForecastCards({ forecastData }) {
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <img
-                src={`https://openweathermap.org/img/wn/${day.icon}@2x.png`}
+                src={
+                  day.icon
+                    ? day.icon.startsWith("http")
+                      ? day.icon
+                      : day.icon.startsWith("//")
+                      ? `https:${day.icon}`
+                      : `https://cdn.weatherapi.com${day.icon}`
+                    : "https://cdn.weatherapi.com/weather/64x64/day/113.png"
+                }
                 alt={day.description}
                 width={40}
                 height={40}
               />
+
               <Typography variant="body2" sx={{ textTransform: "capitalize", ml: 1 }}>
                 {day.description}
               </Typography>

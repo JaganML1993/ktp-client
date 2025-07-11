@@ -137,8 +137,14 @@ function WeatherSummaryCard({
 }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const DEFAULT_ICON = "01d";
-  const iconUrl = `https://openweathermap.org/img/wn/${icon || DEFAULT_ICON}@4x.png`;
+  const getWeatherApiIconUrl = (icon) => {
+    if (!icon) return "https://cdn.weatherapi.com/weather/64x64/day/113.png";
+    if (icon.startsWith("http")) return icon;
+    if (icon.startsWith("//")) return `https:${icon}`;
+    return `https://cdn.weatherapi.com${icon}`;
+  };
+
+  const iconUrl = getWeatherApiIconUrl(icon);
 
   const [showMap, setShowMap] = useState(false);
   const [mapLoading, setMapLoading] = useState(true);
@@ -154,7 +160,14 @@ function WeatherSummaryCard({
 
   const renderCitySummary = (city, weatherData, locationDetails = {}) => {
     const { temperature: temp, description: desc, date: dt, icon: ico } = weatherData;
-    const iconUrl = `https://openweathermap.org/img/wn/${ico || DEFAULT_ICON}@4x.png`;
+    const iconUrl = ico
+      ? ico.startsWith("http")
+        ? ico
+        : ico.startsWith("//")
+        ? `https:${ico}`
+        : `https://cdn.weatherapi.com${ico}`
+      : "https://cdn.weatherapi.com/weather/64x64/day/113.png";
+
     const {
       itineraryTip,
       photogenicForecastContent,
@@ -197,11 +210,6 @@ function WeatherSummaryCard({
               <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, mr: 1 }}>
                 {city?.name || "Select a city"}
               </Typography>
-              {/* <Tooltip title="Show location on map">
-                <IconButton onClick={toggleMap} size="small">
-                  <LocationOnIcon sx={{ color: "error.main" }} />
-                </IconButton>
-              </Tooltip> */}
             </Box>
 
             {/* Date/Time */}
@@ -235,13 +243,13 @@ function WeatherSummaryCard({
           <img
             src={iconUrl}
             alt={desc || "weather icon"}
-            width={isMobile ? 60 : 80}
-            height={isMobile ? 60 : 80}
+            width={isMobile ? 60 : 50}
+            height={isMobile ? 60 : 50}
             style={{
               filter: "drop-shadow(2px 4px 6px rgba(0,0,0,0.1))",
             }}
             onError={(e) => {
-              e.target.src = `https://openweathermap.org/img/wn/${DEFAULT_ICON}@4x.png`;
+              e.target.src = "https://cdn.weatherapi.com/weather/64x64/day/113.png";
             }}
           />
         </Box>
@@ -429,8 +437,7 @@ function WeatherSummaryCard({
         width: "100%",
         borderRadius: 3,
         boxShadow: 4,
-        background:
-          "linear-gradient(to top, lightgrey 0%, lightgrey 1%, #e0e0e0 26%, #efefef 48%, #d9d9d9 75%, #bcbcbc 100%);",
+        background: "linear-gradient(to top, #c4c5c7 0%, #dcdddf 52%, #ebebeb 100%);",
         transition: "transform 0.3s ease, box-shadow 0.3s ease",
         "&:hover": { transform: "translateY(-5px)", boxShadow: 6 },
       }}
@@ -458,7 +465,7 @@ function WeatherSummaryCard({
               }}
               inputProps={{
                 min: new Date().toISOString().split("T")[0],
-                max: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+                max: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
               }}
             />
           </FormControl>
@@ -593,13 +600,13 @@ function WeatherSummaryCard({
               <img
                 src={iconUrl}
                 alt={description || "weather icon"}
-                width={isMobile ? 60 : 80}
-                height={isMobile ? 60 : 80}
+                width={isMobile ? 60 : 50}
+                height={isMobile ? 60 : 50}
                 style={{
                   filter: "drop-shadow(2px 4px 6px rgba(0,0,0,0.1))",
                 }}
                 onError={(e) => {
-                  e.target.src = `https://openweathermap.org/img/wn/${DEFAULT_ICON}@4x.png`;
+                  e.target.src = "https://cdn.weatherapi.com/weather/64x64/day/113.png";
                 }}
               />
             </Box>
